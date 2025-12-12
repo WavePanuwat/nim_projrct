@@ -8,7 +8,11 @@ import {
   CircularProgress,
   Paper,
   Button,
-  Chip
+  Chip,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl
 } from '@mui/material';
 import Sidebar from '@/app/utils/components/sidebar';
 import { useRouter } from 'next/navigation';
@@ -35,7 +39,9 @@ interface Room {
 const AdminHome: React.FC = () => {
   const [userSession, setUserSession] = useState<{ role: 'ADMIN'; userData: { username: string } } | null>(null);
   const [rooms, setRooms] = useState<Room[]>([]);
+  const [filteredRooms, setFilteredRooms] = useState<Room[]>([]);
   const [loading, setLoading] = useState(true);
+  const [statusFilter, setStatusFilter] = useState<string>('All');
   const router = useRouter();
 
   useEffect(() => {
@@ -52,6 +58,7 @@ const AdminHome: React.FC = () => {
       try {
         const response = await axios.get<Room[]>('http://localhost:8081/api/rooms/list');
         setRooms(response.data);
+        setFilteredRooms(response.data);
       } catch (error) {
         console.error('Error fetching rooms:', error);
         alert('ไม่สามารถดึงข้อมูลห้องได้');
@@ -62,9 +69,14 @@ const AdminHome: React.FC = () => {
     fetchRooms();
   }, []);
 
+  useEffect(() => {
+    if (statusFilter === 'All') setFilteredRooms(rooms);
+    else setFilteredRooms(rooms.filter(r => r.status === statusFilter));
+  }, [statusFilter, rooms]);
+
   const handleEditClick = (roomId: number) => router.push(`/admin_editroom/${roomId}`);
   const handleRentClick = (roomId: number) => router.push(`/admin_rentroom/${roomId}`);
-
+  const handleViewRental = (roomId: number) => router.push(`/admin_rental/${roomId}`);
   const handleDelete = async (roomId: number) => {
     if (!confirm("คุณต้องการลบห้องนี้จริงหรือไม่?")) return;
     try {
@@ -95,130 +107,138 @@ const AdminHome: React.FC = () => {
   }
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', backgroundColor: "#f3f6fb" }}>
+    <Box sx={{ display: 'flex', minHeight: '100vh', backgroundColor: "#f0f3f7" }}>
       <Sidebar role="ADMIN" />
-
       <Box component="main" sx={{ flexGrow: 1, p: 4 }}>
-        <Typography variant="h5" sx={{ mb: 3, fontWeight: "bold", color: "#20335c" }}>
-          รายการห้องทั้งหมด
-        </Typography>
+        {/* Header + Filter */}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+          <Typography variant="h5" sx={{ fontWeight: "bold", color: "#20335c" }}>
+            รายการห้องทั้งหมด
+          </Typography>
+          <FormControl size="small" sx={{ width: 180 }}>
+            <InputLabel>กรองสถานะ</InputLabel>
+            <Select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              label="กรองสถานะ"
+            >
+              <MenuItem value="All">ทั้งหมด</MenuItem>
+              <MenuItem value="available">Available</MenuItem>
+              <MenuItem value="rented">Rented</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
 
-        {rooms.length === 0 ? (
+        {filteredRooms.length === 0 ? (
           <Typography>ไม่มีห้องในระบบ</Typography>
         ) : (
           <Box
             sx={{
-              display: 'flex',
-              flexWrap: 'wrap',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
               gap: 3,
             }}
           >
-            {rooms.map((room) => (
+            {filteredRooms.map((room) => (
               <Paper
                 key={room.roomId}
                 sx={{
-                  flex: '1 1 calc(25% - 16px)',
-                  minWidth: 220,
-                  maxWidth: 260,
                   p: 3,
                   borderRadius: 3,
-                  boxShadow: 6,
-                  background: 'linear-gradient(to bottom right, #ffffff, #e3f2fd)',
+                  boxShadow: '0 4px 15px rgba(0,0,0,0.08)',
                   display: 'flex',
                   flexDirection: 'column',
-                  justifyContent: 'space-between'
+                  justifyContent: 'space-between',
+                  position: 'relative',
+                  minHeight: 240,
+                  transition: '0.2s',
+                  '&:hover': { transform: 'translateY(-3px)', boxShadow: '0 8px 25px rgba(0,0,0,0.15)' }
                 }}
               >
-                <Box>
-                  <Typography variant="h6" sx={{ mb: 1, fontWeight: "bold" }}>
-                    ห้อง {room.roomNumber}
-                  </Typography>
+                {/* Status Chip Top-Right */}
+                <Chip
+                  label={room.status}
+                  color={getStatusColor(room.status)}
+                  sx={{
+                    fontWeight: 600,
+                    textTransform: 'capitalize',
+                    position: 'absolute',
+                    top: 16,
+                    right: 16
+                  }}
+                />
 
-                  <Typography>ชั้น: {room.floor}</Typography>
+                {/* Room Number */}
+                <Typography variant="h6" sx={{ fontWeight: 700, color: "#123a63", mb: 1 }}>
+                  ห้อง {room.roomNumber}
+                </Typography>
 
-                  {/* ไม่แสดงข้อมูลถ้าเป็น rented */}
+                {/* Room Details */}
+                <Box sx={{ flexGrow: 1 }}>
+                  <Typography sx={{ mb: 0.5 }}>ชั้น: {room.floor}</Typography>
                   {room.status !== "rented" && (
                     <>
-                      <Typography>แอร์: {room.hasAc ? "✅" : "❌"}</Typography>
-                      <Typography>ราคา/วัน: {room.dailyRate}</Typography>
-                      <Typography>ราคา/เดือน: {room.monthlyRate}</Typography>
+                      <Typography sx={{ mb: 0.5 }}>แอร์: {room.hasAc ? "✅" : "❌"}</Typography>
+                      <Typography sx={{ mb: 0.5 }}>ราคา/วัน: {room.dailyRate}</Typography>
+                      <Typography sx={{ mb: 0.5 }}>ราคา/เดือน: {room.monthlyRate}</Typography>
                     </>
                   )}
-
-                  <Box sx={{ mt: 1 }}>
-                    <Chip label={room.status} color={getStatusColor(room.status)} />
-                  </Box>
-
-                  {/*  แสดงข้อมูลการเช่าเฉพาะ rented */}
                   {room.status === "rented" && room.rentalInfo && (
                     <Box
                       sx={{
-                        mt: 2,
-                        p: 2,
+                        mt: 1,
+                        p: 1.5,
                         borderRadius: 2,
-                        backgroundColor: "#e1f5fe",
-                        border: "1px solid #81d4fa"
+                        backgroundColor: "#eaf4fc",
+                        border: "1px solid #90caf9"
                       }}
                     >
-                      <Typography sx={{ fontWeight: "bold" }}>ข้อมูลการเช่า</Typography>
-                      <Typography>ผู้เช่า: {room.rentalInfo.customerName}</Typography>
-                      <Typography>ประเภท: {room.rentalInfo.rentType}</Typography>
-                      <Typography>เข้า: {room.rentalInfo.checkinDate}</Typography>
-                      <Typography>ออก: {room.rentalInfo.checkoutDate}</Typography>
+                      <Typography sx={{ fontWeight: 700, mb: 0.5 }}>ข้อมูลการเช่า</Typography>
+                      <Typography variant="body2">ผู้เช่า: {room.rentalInfo.customerName}</Typography>
+                      <Typography variant="body2">ประเภท: {room.rentalInfo.rentType}</Typography>
+                      <Typography variant="body2">เข้า: {room.rentalInfo.checkinDate}</Typography>
+                      <Typography variant="body2">ออก: {room.rentalInfo.checkoutDate}</Typography>
                     </Box>
                   )}
                 </Box>
 
-                {/* ปุ่มด้านล่าง */}
-                <Box sx={{ mt: 2, display: 'flex', gap: 2, flexWrap: "wrap" }}>
-                  
-                  {/* ปุ่มเช่า: แสดงเฉพาะ available */}
+                {/* Action Buttons */}
+                <Box sx={{ mt: 2, display: 'flex', gap: 1 }}>
                   {room.status === "available" && (
                     <Button
                       variant="contained"
-                      sx={{
-                        backgroundColor: "#4caf50",
-                        color: "#fff",
-                        "&:hover": { backgroundColor: "#388e3c" },
-                        textTransform: "none",
-                        flex: 1
-                      }}
+                      sx={{ flex: 1, backgroundColor: "#4caf50", color: "#fff", "&:hover": { backgroundColor: "#388e3c" }, textTransform: "none" }}
                       onClick={() => handleRentClick(room.roomId)}
                     >
                       เช่า
                     </Button>
                   )}
-
                   {room.status !== "rented" && (
                     <>
                       <Button
                         variant="contained"
-                        sx={{
-                          backgroundColor: "#20335c",
-                          color: "#fff",
-                          "&:hover": { backgroundColor: "#2a50a2" },
-                          textTransform: "none",
-                          flex: 1
-                        }}
+                        sx={{ flex: 1, backgroundColor: "#1c4e80", color: "#fff", "&:hover": { backgroundColor: "#123a63" }, textTransform: "none" }}
                         onClick={() => handleEditClick(room.roomId)}
                       >
                         แก้ไข
                       </Button>
-
                       <Button
                         variant="contained"
-                        sx={{
-                          backgroundColor: "#d32f2f",
-                          color: "#fff",
-                          "&:hover": { backgroundColor: "#b71c1c" },
-                          textTransform: "none",
-                          flex: 1
-                        }}
+                        sx={{ flex: 1, backgroundColor: "#d32f2f", color: "#fff", "&:hover": { backgroundColor: "#b71c1c" }, textTransform: "none" }}
                         onClick={() => handleDelete(room.roomId)}
                       >
                         ลบ
                       </Button>
                     </>
+                  )}
+                  {room.status === "rented" && (
+                    <Button
+                      variant="outlined"
+                      sx={{ flex: 1, borderColor: "#1976d2", color: "#1976d2", "&:hover": { backgroundColor: "#e3f2fd" }, textTransform: "none" }}
+                      onClick={() => handleViewRental(room.roomId)}
+                    >
+                      ดูรายละเอียด
+                    </Button>
                   )}
                 </Box>
               </Paper>

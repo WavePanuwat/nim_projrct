@@ -41,7 +41,7 @@ const Sidebar: React.FC<SidebarProps> = ({ role }) => {
           { name: 'หน้าเเรก', path: '/admin_home', icon: <HomeIcon /> },
           { name: 'รายชื่อลูกค้า', path: '/admin_listcustomer', icon: <PeopleIcon /> },
           { name: 'เพิ่มห้อง', path: '/admin_addroom', icon: <AddHomeWorkIcon /> },
-          { name: 'คำนวณค่าเช่า', path: '/admin_Invoice', icon: <ReceiptLongIcon /> },
+          { name: 'ใบเเจ้งหนี้', path: '/admin_Invoice', icon: <ReceiptLongIcon /> },
         ]
       : [
           { name: 'หน้าเเรก', path: '/customer_home', icon: <HomeIcon /> },

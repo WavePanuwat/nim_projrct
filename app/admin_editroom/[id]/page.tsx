@@ -10,9 +10,6 @@ import {
   Button,
   FormControlLabel,
   Checkbox,
-  Select,
-  MenuItem,
-  InputLabel,
   Paper,
 } from "@mui/material";
 import Sidebar from "@/app/utils/components/sidebar";
@@ -42,6 +39,8 @@ const AdminEditRoomPage: React.FC = () => {
     status: "available",
   });
 
+  const [saving, setSaving] = useState(false);
+
   useEffect(() => {
     const fetchRoom = async () => {
       try {
@@ -50,32 +49,49 @@ const AdminEditRoomPage: React.FC = () => {
       } catch (error) {
         console.error("Error fetching room:", error);
         alert("ไม่สามารถดึงข้อมูลห้องได้");
+        router.push("/admin_home");
       }
     };
     fetchRoom();
-  }, [roomId]);
+  }, [roomId, router]);
 
-  const handleSubmit = async () => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
+    setRoom({
+      ...room,
+      [name]: type === "checkbox" ? checked : value,
+    });
+  };
+
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (!room.roomNumber.trim()) {
       alert("กรุณากรอกหมายเลขห้อง");
       return;
     }
+
+    setSaving(true);
     try {
-      await axios.put(`http://localhost:8081/api/rooms/update/${room.roomId}`, room);
-      alert("แก้ไขห้องเรียบร้อยแล้ว");
+      await axios.put(`http://localhost:8081/api/rooms/update/${room.roomId}`, {
+        ...room,
+        floor: Number(room.floor),
+        dailyRate: Number(room.dailyRate),
+        monthlyRate: Number(room.monthlyRate),
+      });
+      alert("แก้ไขข้อมูลห้องเรียบร้อยแล้ว");
       router.push("/admin_home");
-    } catch (error) {
-      console.error("Error updating room:", error);
-      alert("เกิดข้อผิดพลาดในการแก้ไขห้อง");
+    } catch (error: any) {
+      console.error(error);
+      alert(error.response?.data || "เกิดข้อผิดพลาดในการแก้ไขห้อง");
+    } finally {
+      setSaving(false);
     }
   };
 
   return (
     <Box sx={{ display: "flex", minHeight: "100vh", backgroundColor: "#f3f6fb" }}>
-      {/* Sidebar */}
       <Sidebar role="ADMIN" />
 
-      {/* Main Content */}
       <Box
         sx={{
           flexGrow: 1,
@@ -92,7 +108,7 @@ const AdminEditRoomPage: React.FC = () => {
             maxWidth: 550,
             p: 4,
             borderRadius: 2,
-            background: "linear-gradient(to bottom right, #ffffff, #e3f2fd)",
+            background: "linear-gradient(to bottom right, #ffffff, #ffffff)",
             boxShadow: "0 6px 20px rgba(0,0,0,0.1)",
           }}
         >
@@ -108,102 +124,106 @@ const AdminEditRoomPage: React.FC = () => {
             แก้ไขห้อง
           </Typography>
 
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
-            <TextField
-              label="หมายเลขห้อง"
-              value={room.roomNumber}
-              onChange={(e) => setRoom({ ...room, roomNumber: e.target.value })}
-              fullWidth
-              size="small"
-            />
-            <TextField
-              label="ชั้น"
-              type="number"
-              value={room.floor}
-              onChange={(e) => setRoom({ ...room, floor: parseInt(e.target.value) })}
-              fullWidth
-              size="small"
-            />
-            <TextField
-              label="ค่าเช่าต่อวัน"
-              type="number"
-              value={room.dailyRate}
-              onChange={(e) => setRoom({ ...room, dailyRate: parseInt(e.target.value) })}
-              fullWidth
-              size="small"
-            />
-            <TextField
-              label="ค่าเช่าต่อเดือน"
-              type="number"
-              value={room.monthlyRate}
-              onChange={(e) => setRoom({ ...room, monthlyRate: parseInt(e.target.value) })}
-              fullWidth
-              size="small"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={room.hasAc}
-                  onChange={(e) => setRoom({ ...room, hasAc: e.target.checked })}
-                  sx={{ color: "#1976d2" }}
-                />
-              }
-              label="มีแอร์"
-            />
-            <Box>
-              <InputLabel id="status-label" sx={{ mb: 1 }}>
-                สถานะ
-              </InputLabel>
-              <Select
-                labelId="status-label"
-                value={room.status}
-                onChange={(e) => setRoom({ ...room, status: e.target.value })}
+          <form onSubmit={handleSave}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+              <TextField
+                label="หมายเลขห้อง"
+                name="roomNumber"
+                value={room.roomNumber}
+                onChange={handleChange}
                 fullWidth
                 size="small"
-                sx={{
-                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                    borderColor: "#1976d2",
-                  },
-                }}
-              >
-                <MenuItem value="available">available</MenuItem>
-                <MenuItem value="rented">rented</MenuItem>
-                <MenuItem value="maintenance">maintenance</MenuItem>
-              </Select>
-            </Box>
+                required
+              />
 
-            <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
-              <Button
-                variant="contained"
-                onClick={handleSubmit}
+              <TextField
+                label="ชั้น"
+                name="floor"
+                type="number"
+                value={room.floor}
+                onChange={handleChange}
+                fullWidth
+                size="small"
+                required
+              />
+
+              <TextField
+                label="ค่าเช่าต่อวัน"
+                name="dailyRate"
+                type="number"
+                value={room.dailyRate}
+                onChange={handleChange}
+                fullWidth
+                size="small"
+                required
+              />
+
+              <TextField
+                label="ค่าเช่าต่อเดือน"
+                name="monthlyRate"
+                type="number"
+                value={room.monthlyRate}
+                onChange={handleChange}
+                fullWidth
+                size="small"
+                required
+              />
+
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    name="hasAc"
+                    checked={room.hasAc}
+                    onChange={handleChange}
+                    sx={{ color: "#20335c" }}
+                  />
+                }
+                label="มีแอร์ภายในห้อง"
+              />
+
+              {/* Buttons */}
+              <Box
                 sx={{
-                  backgroundColor: "#20335c",
-                  color: "#fff",
-                  py: 1.2,
-                  fontWeight: "bold",
-                  "&:hover": { backgroundColor: "#2a50a2" },
-                  borderRadius: 2,
-                  minWidth: 100,
-                  fontSize: "0.85rem",
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  gap: 2,
+                  mt: 3,
                 }}
               >
-                บันทึก
-              </Button>
-              <Button
-                variant="outlined"
-                sx={{
-                  borderColor: "#1976d2",
-                  color: "#1976d2",
-                  "&:hover": { backgroundColor: "#E3F2FD" },
-                  minWidth: 100,
-                  fontSize: "0.85rem",
-                }}
-                onClick={() => router.push("/admin_home")}
-              >
-                ยกเลิก
-              </Button>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  sx={{
+                    backgroundColor: "#20335c",
+                    color: "#fff",
+                    py: 1.2,
+                    fontWeight: "bold",
+                    "&:hover": { backgroundColor: "#2a50a2" },
+                    borderRadius: 2,
+                    minWidth: 100,
+                    fontSize: "0.85rem",
+                  }}
+                  disabled={saving}
+                >
+                  {saving ? "กำลังบันทึก..." : "บันทึก"}
+                </Button>
+
+                <Button
+                  variant="outlined"
+                  sx={{
+                    borderColor: "#1976d2",
+                    color: "#1976d2",
+                    "&:hover": { backgroundColor: "#E3F2FD" },
+                    minWidth: 100,
+                    fontSize: "0.85rem",
+                  }}
+                  onClick={() => router.push("/admin_home")}
+                >
+                  ยกเลิก
+                </Button>
+              </Box>
             </Box>
-          </Box>
+          </form>
         </Paper>
       </Box>
     </Box>
