@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
@@ -12,7 +12,7 @@ import {
   Paper,
 } from "@mui/material";
 import withAuth from "@/app/utils/hocs/withAuth";
-import Sidebar from "@/app/utils/components/Sidebar";
+import Sidebar from "@/app/utils/components/sidebar";
 
 interface Customer {
   customerId: number;
@@ -59,6 +59,7 @@ const EditCustomerPage = () => {
   const handleSave = async () => {
     if (!customer) return;
     setSaving(true);
+
     try {
       const dto = {
         phone: customer.phone,
@@ -66,9 +67,14 @@ const EditCustomerPage = () => {
         firstname: customer.firstname,
         lastname: customer.lastname,
         idCard: customer.idCard,
-        address: customer.address
+        address: customer.address,
       };
-      await axios.put(`http://localhost:8081/api/customers/update/${customer.customerId}`, dto);
+
+      await axios.put(
+        `http://localhost:8081/api/customers/update/${customer.customerId}`,
+        dto
+      );
+
       alert("แก้ไขลูกค้าสำเร็จ");
       router.push("/admin_listcustomer");
     } catch (error) {
@@ -88,7 +94,13 @@ const EditCustomerPage = () => {
   }
 
   return (
-    <Box sx={{ display: "flex", minHeight: "100vh", backgroundColor: "#f3f6fb" }}>
+    <Box
+      sx={{
+        display: "flex",
+        minHeight: "100vh",
+        backgroundColor: "#f3f6fb",
+      }}
+    >
       <Sidebar role="ADMIN" />
 
       <Box
@@ -104,16 +116,21 @@ const EditCustomerPage = () => {
           elevation={4}
           sx={{
             width: "100%",
-            maxWidth: 550, // ลดขนาดฟอร์ม
-            p: 4, // ลด padding
+            maxWidth: 550,
+            p: 4,
             borderRadius: 2,
-            background: "linear-gradient(to bottom right, #ffffff, #e3f2fd)",
+            background: "#ffffff",
             boxShadow: "0 6px 20px rgba(0,0,0,0.1)",
           }}
         >
           <Typography
-            variant="h5" // ลดขนาดหัวข้อ
-            sx={{ mb: 3, fontWeight: "bold", textAlign: "center", color: "#20335c" }}
+            variant="h5"
+            sx={{
+              mb: 3,
+              fontWeight: "bold",
+              textAlign: "center",
+              color: "#20335c",
+            }}
           >
             แก้ไขข้อมูลลูกค้า
           </Typography>
@@ -127,6 +144,7 @@ const EditCustomerPage = () => {
               fullWidth
               size="small"
             />
+
             <TextField
               label="ชื่อ"
               name="firstname"
@@ -135,6 +153,7 @@ const EditCustomerPage = () => {
               fullWidth
               size="small"
             />
+
             <TextField
               label="นามสกุล"
               name="lastname"
@@ -143,6 +162,7 @@ const EditCustomerPage = () => {
               fullWidth
               size="small"
             />
+
             <TextField
               label="เบอร์โทร"
               name="phone"
@@ -151,16 +171,18 @@ const EditCustomerPage = () => {
               fullWidth
               size="small"
             />
+
             <TextField
               label="รหัสผ่าน"
               name="password"
+              type="password"
               value={customer.password}
               onChange={handleChange}
-              type="password"
               fullWidth
               size="small"
-              helperText="เว้นว่างหากไม่ต้องการเปลี่ยนรหัสผ่าน"
+              helperText="ปล่อยว่างหากไม่ต้องการเปลี่ยนรหัสผ่าน"
             />
+
             <TextField
               label="ที่อยู่"
               name="address"
@@ -168,12 +190,24 @@ const EditCustomerPage = () => {
               onChange={handleChange}
               fullWidth
               size="small"
+              multiline
+              rows={2}
             />
 
-            <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
+            {/* ปุ่ม */}
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: 2,
+                mt: 2,
+              }}
+            >
               <Button
+                type="button"
                 variant="contained"
                 onClick={handleSave}
+                disabled={saving}
                 sx={{
                   backgroundColor: "#20335c",
                   color: "#fff",
@@ -182,12 +216,12 @@ const EditCustomerPage = () => {
                   "&:hover": { backgroundColor: "#2a50a2" },
                   borderRadius: 2,
                   minWidth: 100,
-                  fontSize: "0.85rem"
+                  fontSize: "0.85rem",
                 }}
-                disabled={saving}
               >
                 {saving ? "กำลังบันทึก..." : "บันทึก"}
               </Button>
+
               <Button
                 variant="outlined"
                 sx={{
@@ -195,7 +229,7 @@ const EditCustomerPage = () => {
                   color: "#1976d2",
                   "&:hover": { backgroundColor: "#E3F2FD" },
                   minWidth: 100,
-                  fontSize: "0.85rem"
+                  fontSize: "0.85rem",
                 }}
                 onClick={() => router.push("/admin_listcustomer")}
               >

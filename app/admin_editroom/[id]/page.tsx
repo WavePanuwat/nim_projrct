@@ -15,7 +15,7 @@ import {
   InputLabel,
   Paper,
 } from "@mui/material";
-import Sidebar from "@/app/utils/components/Sidebar";
+import Sidebar from "@/app/utils/components/sidebar";
 
 interface Room {
   roomId: number;

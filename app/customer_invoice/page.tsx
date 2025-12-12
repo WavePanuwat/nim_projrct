@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Box, Container, Typography, Paper, Chip, CircularProgress } from "@mui/material";
-import Sidebar from "@/app/utils/components/Sidebar";
+import Sidebar from "@/app/utils/components/sidebar";
 import axios from "axios";
 import withAuth from "@/app/utils/hocs/withAuth";
 

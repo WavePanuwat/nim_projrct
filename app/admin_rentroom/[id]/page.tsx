@@ -12,7 +12,7 @@ import {
   CircularProgress,
   MenuItem,
 } from "@mui/material";
-import Sidebar from "@/app/utils/components/Sidebar";
+import Sidebar from "@/app/utils/components/sidebar";
 
 interface Customer {
   customerId: number;

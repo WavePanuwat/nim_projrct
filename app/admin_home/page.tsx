@@ -10,7 +10,7 @@ import {
   Button,
   Chip
 } from '@mui/material';
-import Sidebar from '@/app/utils/components/Sidebar';
+import Sidebar from '@/app/utils/components/sidebar';
 import { useRouter } from 'next/navigation';
 import withAuth from "@/app/utils/hocs/withAuth";
 

@@ -17,8 +17,8 @@ import {
 } from '@mui/material';
 
 interface UserSession {
+  token: string;
   userData: {
-    customerId?: number; // สำหรับลูกค้า
     username: string;
     fullname: string;
   };
@@ -34,10 +34,10 @@ const LoginPage: React.FC = () => {
   const router = useRouter();
 
   useEffect(() => {
-    setMounted(true); // รอ client ก่อน render
+    setMounted(true);
   }, []);
 
-  if (!mounted) return null; // ป้องกัน SSR render
+  if (!mounted) return null;
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,32 +56,22 @@ const LoginPage: React.FC = () => {
         return;
       }
 
-      let sessionData: UserSession;
+      // สร้าง session เก็บข้อมูลจาก token
+      const sessionData: UserSession = {
+        token: data.token,
+        userData: {
+          username: username,
+          fullname: `${data.firstname} ${data.lastname}`,
+        },
+        role: data.role,
+      };
 
-      if (role === 'CUSTOMER') {
-        // Customer: เก็บ customerId, username, fullname
-        sessionData = {
-          userData: {
-            customerId: data.customerId,
-            username: data.username,
-            fullname: `${data.firstname} ${data.lastname}`,
-          },
-          role: 'CUSTOMER',
-        };
-      } else {
-        // Admin: เก็บ username, fullname
-        sessionData = {
-          userData: {
-            username: data.username,
-            fullname: `${data.firstname ?? ''} ${data.lastname ?? ''}`,
-          },
-          role: 'ADMIN',
-        };
-      }
-
+      // เก็บ token + ข้อมูล user ลง sessionStorage
       sessionStorage.setItem('userSession', JSON.stringify(sessionData));
 
+      // ไปหน้า Home ตาม role
       router.push(role === 'ADMIN' ? '/admin_home' : '/customer_home');
+
     } catch (error: any) {
       if (error.response) {
         setMessage(`Login failed: ${error.response.data.message || 'ข้อมูลไม่ถูกต้อง'}`);

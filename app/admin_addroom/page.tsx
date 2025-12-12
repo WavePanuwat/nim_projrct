@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Box, Typography, TextField, Button, FormControlLabel, Checkbox, Select, MenuItem, InputLabel, Paper } from "@mui/material";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import Sidebar from "@/app/utils/components/Sidebar";
+import Sidebar from "@/app/utils/components/sidebar";
 
 const AdminAddRoomPage: React.FC = () => {
   const router = useRouter();
