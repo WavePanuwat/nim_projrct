@@ -65,123 +65,239 @@ const ListCustomerPage = () => {
   };
 
   return (
-    <Box sx={{ display: "flex", minHeight: "100vh", bgcolor: "#f5f7fa" }}>
-      {/* Sidebar */}
-      <Box sx={{ width: 240 }}>
-        <Sidebar role="ADMIN" />
-      </Box>
+    <Box sx={{ 
+      display: "flex", 
+      minHeight: "100vh", 
+      background: "linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)"
+    }}>
+      <Sidebar role="ADMIN" />
 
-      {/* Main Content */}
-      <Box sx={{ flexGrow: 1, p: 4 }}>
-        <Typography
-          variant="h5"
-          sx={{
-            textAlign: "center",
-            mb: 3,
-            fontWeight: "bold",
-            color: "#1e3a8a",
-          }}
-        >
-          รายชื่อลูกค้า
-        </Typography>
+      <Box sx={{ flexGrow: 1, p: 5 }}>
+        <Paper sx={{
+          p: 5,
+          borderRadius: 3,
+          boxShadow: "0 4px 20px rgba(0,0,0,0.06)",
+          border: "1px solid rgba(0,0,0,0.04)",
+          backgroundColor: "#fff"
+        }}>
+          <Box sx={{ 
+            display: "flex", 
+            justifyContent: "space-between", 
+            alignItems: "center",
+            mb: 4
+          }}>
+            <Box>
+              <Typography
+                variant="h4"
+                sx={{
+                  fontWeight: 600,
+                  color: "#2c3e50",
+                  letterSpacing: "-0.5px",
+                  mb: 0.5
+                }}
+              >
+                รายชื่อลูกค้า
+              </Typography>
+              <Typography variant="body2" sx={{ color: "#6c757d" }}>
+                จัดการข้อมูลลูกค้าทั้งหมด
+              </Typography>
+            </Box>
 
-        {/* Add button */}
-        <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
-          <Button
-            variant="contained"
-            onClick={handleAddClick}
+            <Button
+              variant="contained"
+              onClick={handleAddClick}
+              sx={{
+                backgroundColor: "#2c3e50",
+                color: "white",
+                px: 4,
+                py: 1.5,
+                borderRadius: 2,
+                fontWeight: 600,
+                textTransform: "none",
+                boxShadow: "0 2px 8px rgba(44, 62, 80, 0.2)",
+                transition: "all 0.2s ease",
+                "&:hover": {
+                  backgroundColor: "#34495e",
+                  transform: "translateY(-2px)",
+                  boxShadow: "0 4px 12px rgba(44, 62, 80, 0.3)",
+                },
+              }}
+            >
+              + เพิ่มลูกค้า
+            </Button>
+          </Box>
+          <TableContainer
+            component={Paper}
             sx={{
-              backgroundColor: "#1e3a8a",
-              color: "white",
-              px: 3,
-              py: 1,
-              borderRadius: "8px",
-              boxShadow: "0px 3px 8px rgba(30,58,138,0.3)",
-              "&:hover": {
-                backgroundColor: "#2a50a2",
-                boxShadow: "0px 4px 10px rgba(30,58,138,0.35)",
-              },
+              borderRadius: 2,
+              overflow: "hidden",
+              boxShadow: "none",
+              border: "1px solid #e9ecef"
             }}
           >
-            เพิ่มลูกค้า
-          </Button>
-        </Box>
-
-        {/* Table */}
-        <TableContainer
-          component={Paper}
-          sx={{
-            borderRadius: "12px",
-            overflow: "hidden",
-            boxShadow: "0px 4px 12px rgba(0,0,0,0.1)",
-          }}
-        >
-          <Table>
-            <TableHead sx={{ bgcolor: "#1e3a8a" }}>
-              <TableRow>
-                <TableCell sx={{ color: "#FFFFFF" }}>รหัสบัตรประชาชน</TableCell>
-                <TableCell sx={{ color: "#FFFFFF" }}>ชื่อ-นามสกุล</TableCell>
-                <TableCell sx={{ color: "#FFFFFF" }}>เบอร์โทร</TableCell>
-                <TableCell sx={{ color: "#FFFFFF" }}>ที่อยู่</TableCell>
-                <TableCell sx={{ color: "#FFFFFF" }}>จัดการ</TableCell>
-              </TableRow>
-            </TableHead>
-
-            <TableBody>
-              {customers.map((customer) => (
-                <TableRow
-                  key={customer.customerId}
-                  hover
-                  sx={{
-                    "&:hover": {
-                      backgroundColor: "#eef2ff",
-                    },
-                  }}
-                >
-                  <TableCell>{customer.idCard}</TableCell>
-                  <TableCell>{customer.firstname} {customer.lastname}</TableCell>
-                  <TableCell>{customer.phone}</TableCell>
-                  <TableCell>{customer.address}</TableCell>
-                  <TableCell>
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      size="small"
-                      sx={{
-                        mr: 1,
-                        borderRadius: "6px",
-                        textTransform: "none",
-                        borderColor: "#1e40af",
-                        color: "#1e40af",
-                        "&:hover": { backgroundColor: "#e0e7ff" },
-                      }}
-                      onClick={() => handleEditClick(customer.customerId)}
-                    >
-                      แก้ไข
-                    </Button>
-
-                    <Button
-                      variant="outlined"
-                      color="error"
-                      size="small"
-                      sx={{
-                        borderRadius: "6px",
-                        textTransform: "none",
-                        borderColor: "#dc2626",
-                        color: "#dc2626",
-                        "&:hover": { backgroundColor: "#fee2e2" },
-                      }}
-                      onClick={() => handleDelete(customer.customerId)}
-                    >
-                      ลบ
-                    </Button>
+            <Table>
+              <TableHead>
+                <TableRow sx={{ backgroundColor: "#f8f9fa" }}>
+                  <TableCell sx={{ 
+                    color: "#2c3e50", 
+                    fontWeight: 600,
+                    fontSize: "0.875rem",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.5px",
+                    borderBottom: "2px solid #e9ecef"
+                  }}>
+                    รหัสบัตรประชาชน
+                  </TableCell>
+                  <TableCell sx={{ 
+                    color: "#2c3e50", 
+                    fontWeight: 600,
+                    fontSize: "0.875rem",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.5px",
+                    borderBottom: "2px solid #e9ecef"
+                  }}>
+                    ชื่อ-นามสกุล
+                  </TableCell>
+                  <TableCell sx={{ 
+                    color: "#2c3e50", 
+                    fontWeight: 600,
+                    fontSize: "0.875rem",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.5px",
+                    borderBottom: "2px solid #e9ecef"
+                  }}>
+                    เบอร์โทร
+                  </TableCell>
+                  <TableCell sx={{ 
+                    color: "#2c3e50", 
+                    fontWeight: 600,
+                    fontSize: "0.875rem",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.5px",
+                    borderBottom: "2px solid #e9ecef"
+                  }}>
+                    ที่อยู่
+                  </TableCell>
+                  <TableCell sx={{ 
+                    color: "#2c3e50", 
+                    fontWeight: 600,
+                    fontSize: "0.875rem",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.5px",
+                    borderBottom: "2px solid #e9ecef"
+                  }}>
+                    จัดการ
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
+              </TableHead>
 
-          </Table>
-        </TableContainer>
+              <TableBody>
+                {customers.map((customer, index) => (
+                  <TableRow
+                    key={customer.customerId}
+                    sx={{
+                      transition: "all 0.2s ease",
+                      "&:hover": {
+                        backgroundColor: "#f8f9fa",
+                      },
+                      "&:last-child td": {
+                        borderBottom: 0
+                      }
+                    }}
+                  >
+                    <TableCell sx={{ 
+                      color: "#495057",
+                      fontSize: "0.95rem",
+                      borderBottom: "1px solid #f1f3f5"
+                    }}>
+                      {customer.idCard}
+                    </TableCell>
+                    <TableCell sx={{ 
+                      color: "#2c3e50",
+                      fontWeight: 500,
+                      fontSize: "0.95rem",
+                      borderBottom: "1px solid #f1f3f5"
+                    }}>
+                      {customer.firstname} {customer.lastname}
+                    </TableCell>
+                    <TableCell sx={{ 
+                      color: "#495057",
+                      fontSize: "0.95rem",
+                      borderBottom: "1px solid #f1f3f5"
+                    }}>
+                      {customer.phone}
+                    </TableCell>
+                    <TableCell sx={{ 
+                      color: "#6c757d",
+                      fontSize: "0.9rem",
+                      borderBottom: "1px solid #f1f3f5"
+                    }}>
+                      {customer.address}
+                    </TableCell>
+                    <TableCell sx={{ borderBottom: "1px solid #f1f3f5" }}>
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        sx={{
+                          mr: 1,
+                          borderRadius: 1.5,
+                          textTransform: "none",
+                          borderColor: "#dee2e6",
+                          color: "#2c3e50",
+                          fontWeight: 500,
+                          px: 2,
+                          transition: "all 0.2s ease",
+                          "&:hover": { 
+                            backgroundColor: "#f8f9fa",
+                            borderColor: "#2c3e50",
+                            transform: "translateY(-1px)"
+                          },
+                        }}
+                        onClick={() => handleEditClick(customer.customerId)}
+                      >
+                        แก้ไข
+                      </Button>
+
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        sx={{
+                          borderRadius: 1.5,
+                          textTransform: "none",
+                          borderColor: "#dee2e6",
+                          color: "#dc3545",
+                          fontWeight: 500,
+                          px: 2,
+                          transition: "all 0.2s ease",
+                          "&:hover": { 
+                            backgroundColor: "#fff5f5",
+                            borderColor: "#dc3545",
+                            transform: "translateY(-1px)"
+                          },
+                        }}
+                        onClick={() => handleDelete(customer.customerId)}
+                      >
+                        ลบ
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+
+          {customers.length === 0 && (
+            <Box sx={{ 
+              textAlign: "center", 
+              py: 8,
+              color: "#adb5bd"
+            }}>
+              <Typography sx={{ fontSize: 16, fontWeight: 500 }}>
+                ยังไม่มีข้อมูลลูกค้า
+              </Typography>
+            </Box>
+          )}
+        </Paper>
       </Box>
     </Box>
   );

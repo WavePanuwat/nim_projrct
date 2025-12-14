@@ -10,7 +10,8 @@ import {
   Box,
   Typography,
   Button,
-  ListItemIcon
+  ListItemIcon,
+  Divider
 } from '@mui/material';
 import Link from 'next/link';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -38,13 +39,13 @@ const Sidebar: React.FC<SidebarProps> = ({ role }) => {
   const pages =
     role === 'ADMIN'
       ? [
-          { name: 'หน้าเเรก', path: '/admin_home', icon: <HomeIcon /> },
+          { name: 'หน้าหลัก', path: '/admin_home', icon: <HomeIcon /> },
           { name: 'รายชื่อลูกค้า', path: '/admin_listcustomer', icon: <PeopleIcon /> },
           { name: 'เพิ่มห้อง', path: '/admin_addroom', icon: <AddHomeWorkIcon /> },
-          { name: 'ใบเเจ้งหนี้', path: '/admin_Invoice', icon: <ReceiptLongIcon /> },
+          { name: 'ใบแจ้งหนี้', path: '/admin_Invoice', icon: <ReceiptLongIcon /> },
         ]
       : [
-          { name: 'หน้าเเรก', path: '/customer_home', icon: <HomeIcon /> },
+          { name: 'หน้าหลัก', path: '/customer_home', icon: <HomeIcon /> },
           { name: 'ใบแจ้งหนี้', path: '/customer_invoice', icon: <ReceiptIcon /> },
         ];
 
@@ -57,70 +58,104 @@ const Sidebar: React.FC<SidebarProps> = ({ role }) => {
     <Drawer
       variant="permanent"
       sx={{
-        width: 240,
+        width: 280,
         flexShrink: 0,
         [`& .MuiDrawer-paper`]: {
-          width: 240,
+          width: 280,
           boxSizing: 'border-box',
-          backgroundColor: '#1E2A47',   
-          borderRight: 'none',
-          color: '#D8E6FF',            
-          paddingTop: 2,
-
-           boxShadow: "4px 0 12px rgba(0, 0, 0, 0.25)",
+          backgroundColor: '#fff',
+          borderRight: '1px solid #e9ecef',
+          color: '#2c3e50',
+          boxShadow: '2px 0 8px rgba(0, 0, 0, 0.04)',
         },
       }}
     >
-      {/* Header */}
-      <Toolbar
+      <Box
         sx={{
-          justifyContent: "center",
-          py: 3,
-          flexDirection: "column",
-          textAlign: "center",
+          p: 4,
+          pb: 3,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          borderBottom: '1px solid #f1f3f5',
         }}
       >
-        <Typography
-          variant="h6"
-          fontWeight="bold"
-          sx={{ color: "#FFFFFF", fontSize: "1.15rem" }}
+        <Box
         >
-          {role === 'ADMIN' ? 'Admin' : 'Customer'}
-        </Typography>
-
-        {/* Fullname */}
-        <Typography
-          variant="body2"
+          <Typography
+            sx={{
+              fontSize: '1.5rem',
+              fontWeight: 700,
+              color: '#fff',
+            }}
+          >
+            {fullname.charAt(0).toUpperCase()}
+          </Typography>
+        </Box>
+        <Box
           sx={{
-            mt: 0.3,
-            fontSize: "0.9rem",
-            color: "#F9D977", 
+            px: 2.5,
+            py: 0.5,
+            borderRadius: 2,
+            backgroundColor: role === 'ADMIN' ? '#ecfdf5' : '#dbeafe',
+            border: role === 'ADMIN' ? '1px solid #a7f3d0' : '1px solid #93c5fd',
+            mb: 1.5,
+          }}
+        >
+          <Typography
+            sx={{
+              fontSize: '0.7rem',
+              fontWeight: 700,
+              color: role === 'ADMIN' ? '#047857' : '#1e40af',
+              textTransform: 'uppercase',
+              letterSpacing: '1px',
+            }}
+          >
+            {role === 'ADMIN' ? 'Admin' : 'Customer'}
+          </Typography>
+        </Box>
+
+        <Typography
+          sx={{
+            fontSize: '1rem',
+            fontWeight: 600,
+            color: '#2c3e50',
+            textAlign: 'center',
           }}
         >
           {fullname}
         </Typography>
-      </Toolbar>
+      </Box>
 
       {/* Menu */}
-      <Box sx={{ overflow: 'auto' }}>
-        <List>
-          {pages.map((page) => (
-            <Link key={page.name} href={page.path} passHref>
+      <Box sx={{ flexGrow: 1, overflowY: 'auto', p: 2 }}>
+        <List sx={{ px: 1 }}>
+          {pages.map((page, index) => (
+            <Link key={page.name} href={page.path} passHref style={{ textDecoration: 'none' }}>
               <ListItemButton
                 sx={{
-                  borderRadius: "8px",
-                  mx: 1,
+                  borderRadius: 2,
                   mb: 0.5,
-                  transition: "0.3s",
-                  "&:hover": {
-                    backgroundColor: "#2F3C5C",
+                  py: 1.5,
+                  transition: 'all 0.2s ease',
+                  '&:hover': {
+                    backgroundColor: '#f8f9fa',
+                    transform: 'translateX(4px)',
+                    '& .MuiListItemIcon-root': {
+                      color: '#2c3e50',
+                    },
+                    '& .MuiListItemText-primary': {
+                      color: '#2c3e50',
+                      fontWeight: 600,
+                    },
                   },
                 }}
               >
                 <ListItemIcon
                   sx={{
-                    color: "#F9D977",
-                    minWidth: "40px",
+                    color: '#6c757d',
+                    minWidth: 40,
+                    transition: 'all 0.2s ease',
                   }}
                 >
                   {page.icon}
@@ -129,9 +164,9 @@ const Sidebar: React.FC<SidebarProps> = ({ role }) => {
                 <ListItemText
                   primary={page.name}
                   primaryTypographyProps={{
-                    fontSize: "0.95rem",
+                    fontSize: '0.95rem',
                     fontWeight: 500,
-                    color: "#D8E6FF", 
+                    color: '#495057',
                   }}
                 />
               </ListItemButton>
@@ -140,28 +175,32 @@ const Sidebar: React.FC<SidebarProps> = ({ role }) => {
         </List>
       </Box>
 
-      {/* Logout */}
       <Box
         sx={{
-          position: 'absolute',
-          bottom: 20,
-          width: '100%',
-          px: 2,
+          p: 3,
+          borderTop: '1px solid #f1f3f5',
         }}
       >
         <Button
-          variant="contained"
+          variant="outlined"
           fullWidth
           onClick={handleLogout}
           startIcon={<LogoutIcon />}
           sx={{
-            py: 1,
+            py: 1.3,
             textTransform: 'none',
-            fontSize: "0.95rem",
-            borderRadius: "10px",
-            backgroundColor: "#EF4444",
+            fontSize: '0.95rem',
+            borderRadius: 2,
+            fontWeight: 600,
+            borderColor: '#dc3545',
+            color: '#dc3545',
+            transition: 'all 0.2s ease',
             '&:hover': {
-              backgroundColor: "#DC2626",
+              borderColor: '#dc3545',
+              backgroundColor: '#fff5f5',
+              color: '#dc3545',
+              transform: 'translateY(-2px)',
+              boxShadow: '0 4px 12px rgba(220, 53, 69, 0.15)',
             },
           }}
         >

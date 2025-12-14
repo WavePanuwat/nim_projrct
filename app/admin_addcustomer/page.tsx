@@ -7,6 +7,8 @@ import {
   Typography,
   TextField,
   Paper,
+  CircularProgress,
+  Divider
 } from "@mui/material";
 import { useRouter } from "next/navigation";
 import axios from "axios";
@@ -15,7 +17,6 @@ import Sidebar from "@/app/utils/components/sidebar";
 
 const AddCustomerPage = () => {
   const router = useRouter();
-
   const [saving, setSaving] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -52,151 +53,321 @@ const AddCustomerPage = () => {
       sx={{
         display: "flex",
         minHeight: "100vh",
-        backgroundColor: "#f3f6fb",
+        bgcolor: "#fafafa"
       }}
     >
-      {/* Sidebar */}
       <Sidebar role="ADMIN" />
 
-      {/* Main content center box */}
       <Box
         sx={{
           flexGrow: 1,
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          p: 3,
+          p: 4,
         }}
       >
         <Paper
-          elevation={4}
+          elevation={0}
           sx={{
             width: "100%",
-            maxWidth: 550,
-            p: 4,
-            borderRadius: 2,
-            background: "linear-gradient(to bottom right, #ffffffff, #ffffffff)",
-            boxShadow: "0 6px 20px rgba(0,0,0,0.1)",
+            maxWidth: 600,
+            p: 5,
+            borderRadius: 3,
+            border: "1px solid #e5e7eb",
+            bgcolor: "#fff"
           }}
         >
-          <Typography
-            variant="h5"
-            sx={{
-              mb: 3,
-              fontWeight: "bold",
-              textAlign: "center",
-              color: "#20335c",
-            }}
-          >
-            เพิ่มลูกค้าใหม่
-          </Typography>
+          <Box sx={{ mb: 4 }}>
+            <Typography
+              variant="h4"
+              sx={{
+                fontWeight: 600,
+                color: "#111827",
+                letterSpacing: "-0.02em",
+                mb: 1
+              }}
+            >
+              เพิ่มลูกค้าใหม่
+            </Typography>
+            <Typography variant="body2" sx={{ color: "#6b7280" }}>
+              กรอกข้อมูลลูกค้าให้ครบถ้วน
+            </Typography>
+          </Box>
+
+          <Divider sx={{ mb: 4 }} />
 
           <form onSubmit={handleSave}>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
-              <TextField
-                label="รหัสบัตรประชาชน"
-                name="idCard"
-                value={formData.idCard}
-                onChange={handleChange}
-                fullWidth
-                size="small"
-                required
-              />
-
-              <TextField
-                label="ชื่อ"
-                name="firstname"
-                value={formData.firstname}
-                onChange={handleChange}
-                fullWidth
-                size="small"
-                required
-              />
-
-              <TextField
-                label="นามสกุล"
-                name="lastname"
-                value={formData.lastname}
-                onChange={handleChange}
-                fullWidth
-                size="small"
-                required
-              />
-
-              <TextField
-                label="เบอร์โทร"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                fullWidth
-                size="small"
-                required
-              />
-
-              <TextField
-                label="รหัสผ่าน"
-                name="password"
-                type="password"
-                value={formData.password}
-                onChange={handleChange}
-                fullWidth
-                size="small"
-                required
-              />
-
-              <TextField
-                label="ที่อยู่"
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-                fullWidth
-                multiline
-                rows={2}
-                size="small"
-                required
-              />
-
-              {/* Button group */}
-                <Box
-                sx={{
-                    display: "flex",
-                    justifyContent: "flex-end",   // ชิดซ้าย
-                    gap: 2,                          // ระยะห่างระหว่างปุ่ม
-                    mt: 2,
-                }}
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+              
+              <Box>
+                <Typography 
+                  variant="body2" 
+                  sx={{ 
+                    mb: 1.5, 
+                    fontWeight: 500, 
+                    color: "#374151" 
+                  }}
                 >
-                <Button
-                    type="submit"
-                    variant="contained"
-                    sx={{
-                    backgroundColor: "#20335c",
-                    color: "#fff",
-                    py: 1.2,
-                    fontWeight: "bold",
-                    "&:hover": { backgroundColor: "#2a50a2" },
-                    borderRadius: 2,
-                    minWidth: 100,
-                    fontSize: "0.85rem",
+                  รหัสบัตรประชาชน
+                </Typography>
+                <TextField
+                  name="idCard"
+                  value={formData.idCard}
+                  onChange={handleChange}
+                  fullWidth
+                  required
+                  placeholder="เลขบัตรประชาชน 13 หลัก"
+                  inputProps={{ maxLength: 13 }}
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      bgcolor: "#fafafa",
+                      borderRadius: 2,
+                      "& fieldset": { borderColor: "#e5e7eb" },
+                      "&:hover fieldset": { borderColor: "#d1d5db" },
+                      "&.Mui-focused fieldset": { 
+                        borderColor: "#111827",
+                        borderWidth: "1.5px"
+                      }
+                    }
+                  }}
+                />
+              </Box>
+
+              <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2 }}>
+                <Box>
+                  <Typography 
+                    variant="body2" 
+                    sx={{ 
+                      mb: 1.5, 
+                      fontWeight: 500, 
+                      color: "#374151" 
                     }}
-                    disabled={saving}
-                >
-                    {saving ? "กำลังบันทึก..." : "บันทึก"}
-                </Button>
-
-                <Button
-                    variant="outlined"
+                  >
+                    ชื่อ
+                  </Typography>
+                  <TextField
+                    name="firstname"
+                    value={formData.firstname}
+                    onChange={handleChange}
+                    fullWidth
+                    required
+                    placeholder="ชื่อจริง"
                     sx={{
-                    borderColor: "#1976d2",
-                    color: "#1976d2",
-                    "&:hover": { backgroundColor: "#E3F2FD" },
-                    minWidth: 100,
-                    fontSize: "0.85rem",
+                      "& .MuiOutlinedInput-root": {
+                        bgcolor: "#fafafa",
+                        borderRadius: 2,
+                        "& fieldset": { borderColor: "#e5e7eb" },
+                        "&:hover fieldset": { borderColor: "#d1d5db" },
+                        "&.Mui-focused fieldset": { 
+                          borderColor: "#111827",
+                          borderWidth: "1.5px"
+                        }
+                      }
                     }}
-                    onClick={() => router.push("/admin_listcustomer")}
-                >
-                    ยกเลิก
-                </Button>
+                  />
                 </Box>
+
+                <Box>
+                  <Typography 
+                    variant="body2" 
+                    sx={{ 
+                      mb: 1.5, 
+                      fontWeight: 500, 
+                      color: "#374151" 
+                    }}
+                  >
+                    นามสกุล
+                  </Typography>
+                  <TextField
+                    name="lastname"
+                    value={formData.lastname}
+                    onChange={handleChange}
+                    fullWidth
+                    required
+                    placeholder="นามสกุล"
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        bgcolor: "#fafafa",
+                        borderRadius: 2,
+                        "& fieldset": { borderColor: "#e5e7eb" },
+                        "&:hover fieldset": { borderColor: "#d1d5db" },
+                        "&.Mui-focused fieldset": { 
+                          borderColor: "#111827",
+                          borderWidth: "1.5px"
+                        }
+                      }
+                    }}
+                  />
+                </Box>
+              </Box>
+
+              <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2 }}>
+                <Box>
+                  <Typography 
+                    variant="body2" 
+                    sx={{ 
+                      mb: 1.5, 
+                      fontWeight: 500, 
+                      color: "#374151" 
+                    }}
+                  >
+                    เบอร์โทร
+                  </Typography>
+                  <TextField
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    fullWidth
+                    required
+                    placeholder="0xx-xxx-xxxx"
+                    inputProps={{ maxLength: 10 }}
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        bgcolor: "#fafafa",
+                        borderRadius: 2,
+                        "& fieldset": { borderColor: "#e5e7eb" },
+                        "&:hover fieldset": { borderColor: "#d1d5db" },
+                        "&.Mui-focused fieldset": { 
+                          borderColor: "#111827",
+                          borderWidth: "1.5px"
+                        }
+                      }
+                    }}
+                  />
+                </Box>
+
+                <Box>
+                  <Typography 
+                    variant="body2" 
+                    sx={{ 
+                      mb: 1.5, 
+                      fontWeight: 500, 
+                      color: "#374151" 
+                    }}
+                  >
+                    รหัสผ่าน
+                  </Typography>
+                  <TextField
+                    name="password"
+                    type="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    fullWidth
+                    required
+                    placeholder="••••••••"
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        bgcolor: "#fafafa",
+                        borderRadius: 2,
+                        "& fieldset": { borderColor: "#e5e7eb" },
+                        "&:hover fieldset": { borderColor: "#d1d5db" },
+                        "&.Mui-focused fieldset": { 
+                          borderColor: "#111827",
+                          borderWidth: "1.5px"
+                        }
+                      }
+                    }}
+                  />
+                </Box>
+              </Box>
+
+              <Box>
+                <Typography 
+                  variant="body2" 
+                  sx={{ 
+                    mb: 1.5, 
+                    fontWeight: 500, 
+                    color: "#374151" 
+                  }}
+                >
+                  ที่อยู่
+                </Typography>
+                <TextField
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  fullWidth
+                  multiline
+                  rows={3}
+                  required
+                  placeholder="ที่อยู่เต็ม รวมถึงตำบล อำเภอ จังหวัด และรหัสไปรษณีย์"
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      bgcolor: "#fafafa",
+                      borderRadius: 2,
+                      "& fieldset": { borderColor: "#e5e7eb" },
+                      "&:hover fieldset": { borderColor: "#d1d5db" },
+                      "&.Mui-focused fieldset": { 
+                        borderColor: "#111827",
+                        borderWidth: "1.5px"
+                      }
+                    }
+                  }}
+                />
+              </Box>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  gap: 2,
+                  mt: 2,
+                  pt: 4,
+                  borderTop: "1px solid #e5e7eb"
+                }}
+              >
+
+                <Button
+                  type="submit"
+                  variant="contained"
+                  fullWidth
+                  disabled={saving}
+                  sx={{
+                    py: 1.5,
+                    fontWeight: 600,
+                    fontSize: 15,
+                    borderRadius: 2,
+                    bgcolor: "#111827",
+                    color: "#fff",
+                    textTransform: "none",
+                    boxShadow: "none",
+                    "&:hover": { 
+                      bgcolor: "#1f2937",
+                      boxShadow: "0 2px 8px rgba(0,0,0,0.15)"
+                    },
+                    "&:disabled": {
+                      bgcolor: "#e5e7eb",
+                      color: "#9ca3af"
+                    }
+                  }}
+                >
+                  {saving ? (
+                    <CircularProgress size={22} sx={{ color: "#9ca3af" }} />
+                  ) : (
+                    "บันทึก"
+                  )}
+                </Button>
+                <Button
+                  variant="outlined"
+                  fullWidth
+                  onClick={() => router.push("/admin_listcustomer")}
+                  sx={{
+                    py: 1.5,
+                    fontWeight: 500,
+                    fontSize: 15,
+                    borderRadius: 2,
+                    borderColor: "#e5e7eb",
+                    color: "#6b7280",
+                    textTransform: "none",
+                    "&:hover": { 
+                      bgcolor: "#fafafa",
+                      borderColor: "#d1d5db"
+                    }
+                  }}
+                >
+                  ยกเลิก
+                </Button>
+              </Box>
             </Box>
           </form>
         </Paper>
