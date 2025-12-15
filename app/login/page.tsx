@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
 import {
   Container,
   Box,
@@ -15,7 +15,6 @@ import {
   FormControlLabel,
   FormControl,
   Alert,
-  Divider,
   CircularProgress
 } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
@@ -23,10 +22,7 @@ import LockIcon from '@mui/icons-material/Lock';
 
 interface UserSession {
   token: string;
-  userData: {
-    username: string;
-    fullname: string;
-  };
+  userData: any;
   role: 'ADMIN' | 'CUSTOMER';
 }
 
@@ -64,20 +60,31 @@ const LoginPage: React.FC = () => {
         return;
       }
 
-      // สร้าง session เก็บข้อมูลจาก token
-      const sessionData: UserSession = {
-        token: data.token,
-        userData: {
-          username: username,
-          fullname: `${data.firstname} ${data.lastname}`,
-        },
-        role: data.role,
-      };
+      let sessionData: UserSession;
 
-      // เก็บ token + ข้อมูล user ลง sessionStorage
+      if (role === 'ADMIN') {
+        sessionData = {
+          token: data.token,
+          userData: {
+            userId: data.userId,
+            username: username,
+            fullname: `${data.firstname} ${data.lastname}`,
+          },
+          role: 'ADMIN'
+        };
+      } else {
+        sessionData = {
+          token: data.token,
+          userData: {
+            customerId: data.userId,
+            firstname: data.firstname,
+            lastname: data.lastname,
+          },
+          role: 'CUSTOMER'
+        };
+      }
+
       sessionStorage.setItem('userSession', JSON.stringify(sessionData));
-
-      // ไปหน้า Home ตาม role
       router.push(role === 'ADMIN' ? '/admin_home' : '/customer_home');
 
     } catch (error: any) {
@@ -98,44 +105,50 @@ const LoginPage: React.FC = () => {
       sx={{
         display: 'flex',
         minHeight: '100vh',
-        bgcolor: '#fafafa',
+        bgcolor: '#f8fafc',
         alignItems: 'center',
         justifyContent: 'center',
-        p: 3
+        p: 2
       }}
     >
       <Container maxWidth="sm">
         <Paper
           elevation={0}
           sx={{
-            p: 6,
-            borderRadius: 3,
-            border: '1px solid #e5e7eb',
-            bgcolor: '#fff'
+            p: { xs: 4, sm: 5 },
+            borderRadius: 2,
+            bgcolor: '#ffffff',
+            boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
+            border: '1px solid #e2e8f0'
           }}
         >
-          {/* Header */}
-          <Box sx={{ mb: 5, textAlign: 'center' }}>
+          <Box sx={{ mb: 4, textAlign: 'center' }}>
             <Typography
-              variant="h3"
+              variant="h5"
               sx={{
                 fontWeight: 600,
-                color: '#111827',
-                letterSpacing: '-0.02em',
-                mb: 1
+                color: '#0f172a',
+                letterSpacing: '-0.01em',
+                mb: 0.5,
+                fontSize: { xs: '1.5rem', sm: '1.75rem' }
               }}
             >
               เข้าสู่ระบบ
             </Typography>
-            <Typography variant="body1" sx={{ color: '#6b7280' }}>
-              กรุณาเลือกประเภทผู้ใช้และกรอกข้อมูล
+            <Typography 
+              variant="body2" 
+              sx={{ 
+                color: '#64748b',
+                fontSize: '0.875rem'
+              }}
+            >
+              กรุณากรอกข้อมูลเพื่อเข้าใช้งาน
             </Typography>
           </Box>
 
-          <Divider sx={{ mb: 4 }} />
-
           <form onSubmit={handleLogin}>
-            <Box sx={{ mb: 4 }}>
+            {/* Role Selection */}
+            <Box sx={{ mb: 3 }}>
               <FormControl fullWidth>
                 <RadioGroup
                   row
@@ -143,52 +156,80 @@ const LoginPage: React.FC = () => {
                   onChange={(e) => setRole(e.target.value as 'ADMIN' | 'CUSTOMER')}
                   sx={{ 
                     justifyContent: 'center',
-                    gap: 3
+                    gap: 1.5
                   }}
                 >
-                  <FormControlLabel 
-                    value="ADMIN" 
-                    control={
-                      <Radio 
-                        sx={{ 
-                          color: '#d1d5db',
-                          '&.Mui-checked': { color: '#111827' }
-                        }} 
-                      />
-                    } 
+                  <FormControlLabel
+                    value="ADMIN"
+                    control={<Radio sx={{ display: 'none' }} />}
                     label={
-                      <Typography sx={{ fontWeight: 500, color: '#374151', fontSize: '1rem' }}>
+                      <Typography 
+                        sx={{ 
+                          fontWeight: 500,
+                          color: role === 'ADMIN' ? '#0f172a' : '#64748b',
+                          fontSize: '0.875rem'
+                        }}
+                      >
                         ผู้ดูแลระบบ
                       </Typography>
                     }
+                    sx={{
+                      bgcolor: role === 'ADMIN' ? '#f1f5f9' : 'transparent',
+                      px: 2.5,
+                      py: 1,
+                      borderRadius: 1.5,
+                      border: role === 'ADMIN' ? '1.5px solid #cbd5e1' : '1.5px solid transparent',
+                      m: 0,
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      '&:hover': {
+                        bgcolor: '#f8fafc',
+                        borderColor: '#cbd5e1'
+                      }
+                    }}
                   />
-                  <FormControlLabel 
-                    value="CUSTOMER" 
-                    control={
-                      <Radio 
-                        sx={{ 
-                          color: '#d1d5db',
-                          '&.Mui-checked': { color: '#111827' }
-                        }} 
-                      />
-                    } 
+                  <FormControlLabel
+                    value="CUSTOMER"
+                    control={<Radio sx={{ display: 'none' }} />}
                     label={
-                      <Typography sx={{ fontWeight: 500, color: '#374151', fontSize: '1rem' }}>
+                      <Typography 
+                        sx={{ 
+                          fontWeight: 500,
+                          color: role === 'CUSTOMER' ? '#0f172a' : '#64748b',
+                          fontSize: '0.875rem'
+                        }}
+                      >
                         ลูกค้า
                       </Typography>
                     }
+                    sx={{
+                      bgcolor: role === 'CUSTOMER' ? '#f1f5f9' : 'transparent',
+                      px: 2.5,
+                      py: 1,
+                      borderRadius: 1.5,
+                      border: role === 'CUSTOMER' ? '1.5px solid #cbd5e1' : '1.5px solid transparent',
+                      m: 0,
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      '&:hover': {
+                        bgcolor: '#f8fafc',
+                        borderColor: '#cbd5e1'
+                      }
+                    }}
                   />
                 </RadioGroup>
               </FormControl>
             </Box>
 
-            <Box sx={{ mb: 3 }}>
+            {/* Username Field */}
+            <Box sx={{ mb: 2.5 }}>
               <Typography 
                 variant="body2" 
                 sx={{ 
-                  mb: 1.5, 
-                  fontWeight: 500, 
-                  color: '#374151' 
+                  mb: 1,
+                  fontWeight: 500,
+                  color: '#334155',
+                  fontSize: '0.875rem'
                 }}
               >
                 {role === 'ADMIN' ? 'ชื่อผู้ใช้' : 'เบอร์โทรศัพท์'}
@@ -201,17 +242,22 @@ const LoginPage: React.FC = () => {
                 placeholder={role === 'ADMIN' ? 'กรอกชื่อผู้ใช้' : 'กรอกเบอร์โทรศัพท์'}
                 InputProps={{
                   startAdornment: (
-                    <PersonIcon sx={{ mr: 1, color: '#9ca3af' }} />
+                    <PersonIcon sx={{ mr: 1.5, color: '#94a3b8', fontSize: 20 }} />
                   ),
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#fafafa',
-                    borderRadius: 2,
-                    '& fieldset': { borderColor: '#e5e7eb' },
-                    '&:hover fieldset': { borderColor: '#d1d5db' },
+                    bgcolor: '#ffffff',
+                    borderRadius: 1.5,
+                    fontSize: '0.9rem',
+                    '& fieldset': { 
+                      borderColor: '#e2e8f0'
+                    },
+                    '&:hover fieldset': { 
+                      borderColor: '#cbd5e1'
+                    },
                     '&.Mui-focused fieldset': { 
-                      borderColor: '#111827',
+                      borderColor: '#0f172a',
                       borderWidth: '1.5px'
                     }
                   }
@@ -219,13 +265,15 @@ const LoginPage: React.FC = () => {
               />
             </Box>
 
-            <Box sx={{ mb: 4 }}>
+            {/* Password Field */}
+            <Box sx={{ mb: 3 }}>
               <Typography 
                 variant="body2" 
                 sx={{ 
-                  mb: 1.5, 
-                  fontWeight: 500, 
-                  color: '#374151' 
+                  mb: 1,
+                  fontWeight: 500,
+                  color: '#334155',
+                  fontSize: '0.875rem'
                 }}
               >
                 รหัสผ่าน
@@ -239,17 +287,22 @@ const LoginPage: React.FC = () => {
                 placeholder="กรอกรหัสผ่าน"
                 InputProps={{
                   startAdornment: (
-                    <LockIcon sx={{ mr: 1, color: '#9ca3af' }} />
+                    <LockIcon sx={{ mr: 1.5, color: '#94a3b8', fontSize: 20 }} />
                   ),
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    bgcolor: '#fafafa',
-                    borderRadius: 2,
-                    '& fieldset': { borderColor: '#e5e7eb' },
-                    '&:hover fieldset': { borderColor: '#d1d5db' },
+                    bgcolor: '#ffffff',
+                    borderRadius: 1.5,
+                    fontSize: '0.9rem',
+                    '& fieldset': { 
+                      borderColor: '#e2e8f0'
+                    },
+                    '&:hover fieldset': { 
+                      borderColor: '#cbd5e1'
+                    },
                     '&.Mui-focused fieldset': { 
-                      borderColor: '#111827',
+                      borderColor: '#0f172a',
                       borderWidth: '1.5px'
                     }
                   }
@@ -257,15 +310,18 @@ const LoginPage: React.FC = () => {
               />
             </Box>
 
+            {/* Error Message */}
             {message && (
               <Alert 
                 severity="error" 
                 sx={{ 
                   mb: 3,
-                  borderRadius: 2,
+                  borderRadius: 1.5,
                   bgcolor: '#fef2f2',
                   color: '#991b1b',
-                  '& .MuiAlert-icon': {
+                  border: '1px solid #fecaca',
+                  fontSize: '0.875rem',
+                  '& .MuiAlert-icon': { 
                     color: '#dc2626'
                   }
                 }}
@@ -274,32 +330,33 @@ const LoginPage: React.FC = () => {
               </Alert>
             )}
 
+            {/* Submit Button */}
             <Button
               type="submit"
               variant="contained"
               fullWidth
               disabled={loading}
               sx={{
-                py: 1.8,
+                py: 1.5,
                 fontWeight: 600,
-                fontSize: 16,
-                borderRadius: 2,
-                bgcolor: '#111827',
-                color: '#fff',
+                fontSize: '0.95rem',
+                borderRadius: 1.5,
+                bgcolor: '#0f172a',
+                color: '#ffffff',
                 textTransform: 'none',
                 boxShadow: 'none',
                 '&:hover': { 
-                  bgcolor: '#1f2937',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+                  bgcolor: '#1e293b',
+                  boxShadow: 'none'
                 },
-                '&:disabled': {
-                  bgcolor: '#e5e7eb',
-                  color: '#9ca3af'
+                '&:disabled': { 
+                  bgcolor: '#e2e8f0',
+                  color: '#94a3b8'
                 }
               }}
             >
               {loading ? (
-                <CircularProgress size={24} sx={{ color: '#9ca3af' }} />
+                <CircularProgress size={22} sx={{ color: '#94a3b8' }} />
               ) : (
                 'เข้าสู่ระบบ'
               )}

@@ -44,6 +44,15 @@ const AdminHome: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState<string>('All');
   const router = useRouter();
 
+  const formatThaiDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('th-TH', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    });
+  };
+
   useEffect(() => {
     const session = sessionStorage.getItem('userSession');
     if (session) {
@@ -96,73 +105,30 @@ const AdminHome: React.FC = () => {
         justifyContent: 'center', 
         alignItems: 'center', 
         height: '100vh',
-        background: 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)'
+        bgcolor: '#fafafa'
       }}>
-        <CircularProgress sx={{ color: '#2c3e50' }} size={60} thickness={3.5} />
+        <CircularProgress sx={{ color: '#1a1a2e' }} size={50} thickness={4} />
       </Box>
     );
   }
 
   return (
-    <Box sx={{ 
-      display: 'flex', 
-      minHeight: '100vh', 
-      background: 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)'
-    }}>
+    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#fafafa' }}>
       <Sidebar role="ADMIN" />
-      <Box component="main" sx={{ 
-        flexGrow: 1, 
-        p: 5,
-        '@media (max-width: 600px)': { p: 3 }
-      }}>
-        <Box sx={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center', 
-          mb: 5,
-          flexWrap: 'wrap',
-          gap: 3
-        }}>
+      <Box component="main" sx={{ flexGrow: 1, p: { xs: 2, md: 3 }, maxWidth: '1600px', mx: 'auto', width: '100%' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, flexWrap: 'wrap', gap: 2 }}>
           <Box>
-            <Typography 
-              variant="h4" 
-              sx={{ 
-                fontWeight: 600,
-                color: '#2c3e50',
-                letterSpacing: '-0.5px',
-                mb: 0.5
-              }}
-            >
-              รายการห้องทั้งหมด
+            <Typography variant="h5" sx={{ fontWeight: 600, color: '#1a1a2e', letterSpacing: '-0.02em', mb: 0.5, fontSize: { xs: '1.5rem', md: '1.75rem' } }}>
+              รายการห้องพัก
             </Typography>
-            <Typography variant="body2" sx={{ color: '#6c757d', fontWeight: 400 }}>
+            <Typography variant="body2" sx={{ color: '#64748b', fontWeight: 400, fontSize: '0.875rem' }}>
               จัดการและติดตามสถานะห้องพักทั้งหมด
             </Typography>
           </Box>
           
-          <FormControl 
-            size="small" 
-            sx={{ 
-              minWidth: 180,
-              '& .MuiOutlinedInput-root': {
-                borderRadius: 2,
-                backgroundColor: '#fff',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-                '& fieldset': {
-                  borderColor: '#dee2e6'
-                },
-                '&:hover fieldset': {
-                  borderColor: '#2c3e50'
-                }
-              }
-            }}
-          >
-            <InputLabel sx={{ fontWeight: 500, color: '#6c757d' }}>กรองสถานะ</InputLabel>
-            <Select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              label="กรองสถานะ"
-            >
+          <FormControl size="small" sx={{ minWidth: 140 }}>
+            <InputLabel>กรองสถานะ</InputLabel>
+            <Select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} label="กรองสถานะ">
               <MenuItem value="All">ทั้งหมด</MenuItem>
               <MenuItem value="available">ว่าง</MenuItem>
               <MenuItem value="rented">ให้เช่าแล้ว</MenuItem>
@@ -171,331 +137,130 @@ const AdminHome: React.FC = () => {
         </Box>
 
         {filteredRooms.length === 0 ? (
-          <Paper sx={{ 
-            p: 6, 
-            textAlign: 'center', 
-            borderRadius: 3,
-            backgroundColor: '#fff',
-            boxShadow: '0 4px 20px rgba(0,0,0,0.06)'
-          }}>
-            <Typography variant="h6" sx={{ color: '#adb5bd', fontWeight: 500 }}>
+          <Paper sx={{ p: 6, textAlign: 'center', borderRadius: 2, bgcolor: '#ffffff', boxShadow: 'none', border: '1px solid #f1f5f9' }}>
+            <Typography variant="h6" sx={{ color: '#94a3b8', fontWeight: 500, fontSize: '0.95rem' }}>
               ไม่พบห้องในระบบ
             </Typography>
           </Paper>
         ) : (
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-              gap: 3,
-            }}
-          >
+          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(auto-fill, minmax(280px, 1fr))' }, gap: 2 }}>
             {filteredRooms.map((room) => (
-              <Paper
-                key={room.roomId}
-                sx={{
-                  borderRadius: 3,
-                  backgroundColor: '#fff',
-                  boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
-                  border: '1px solid rgba(0,0,0,0.04)',
-                  overflow: 'hidden',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  transition: 'all 0.3s ease',
-                  '&:hover': { 
-                    transform: 'translateY(-8px)',
-                    boxShadow: '0 12px 40px rgba(0,0,0,0.12)'
-                  }
-                }}
-              >
-                <Box sx={{
-                  p: 3,
-                  pb: 2.5,
-                  background: room.status === 'available' 
-                    ? 'linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%)'
-                    : room.status === 'rented'
-                    ? 'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)'
-                    : 'linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'flex-start',
-                  position: 'relative'
-                }}>
+              <Paper key={room.roomId} sx={{ borderRadius: 2, bgcolor: '#ffffff', boxShadow: 'none', border: '1px solid #f1f5f9', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                <Box sx={{ p: 2, pb: 1.5, bgcolor: '#ffffff', borderBottom: '1px solid #f1f5f9', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                   <Box>
-                    <Typography 
-                      variant="h5" 
-                      sx={{ 
-                        fontWeight: 700, 
-                        color: '#2c3e50',
-                        letterSpacing: '-0.5px',
-                        mb: 0.3
-                      }}
-                    >
-                      หมายเลขห้อง {room.roomNumber}
+                    <Typography variant="h6" sx={{ fontWeight: 600, color: '#1a1a2e', letterSpacing: '-0.01em', mb: 0.25, fontSize: '1rem' }}>
+                      ห้อง {room.roomNumber}
                     </Typography>
-                    <Typography variant="body2" sx={{ color: '#6c757d', fontWeight: 500 }}>
+                    <Typography variant="body2" sx={{ color: '#64748b', fontSize: '0.8rem', fontWeight: 500 }}>
                       ชั้น {room.floor}
                     </Typography>
                   </Box>
-                  
                   <Chip
                     label={room.status === 'available' ? 'ว่าง' : room.status === 'rented' ? 'ให้เช่าแล้ว' : room.status}
+                    size="small"
                     sx={{
                       fontWeight: 600,
-                      fontSize: '0.75rem',
-                      height: 28,
-                      backgroundColor: room.status === 'available' ? '#10b981' : room.status === 'rented' ? '#f59e0b' : '#6c757d',
-                      color: '#fff',
-                      boxShadow: room.status === 'available' 
-                        ? '0 2px 8px rgba(16, 185, 129, 0.3)' 
-                        : room.status === 'rented'
-                        ? '0 2px 8px rgba(245, 158, 11, 0.3)'
-                        : 'none'
+                      fontSize: '0.7rem',
+                      height: 22,
+                      bgcolor: room.status === 'available' ? '#22c55e' : room.status === 'rented' ? '#eab308' : '#64748b',
+                      color: '#ffffff',
+                      '& .MuiChip-label': { px: 1.25 }
                     }}
                   />
                 </Box>
 
-                <Box sx={{ p: 3, flexGrow: 1 }}>
+                <Box sx={{ p: 2, flexGrow: 1 }}>
                   {room.status !== "rented" && (
                     <Box>
-                      <Box sx={{ 
-                        display: 'flex', 
-                        alignItems: 'center',
-                        gap: 1.5,
-                        mb: 3,
-                        p: 2,
-                        borderRadius: 2,
-                        backgroundColor: '#f8f9fa'
-                      }}>
-                        <Box sx={{
-                          width: 40,
-                          height: 40,
-                          borderRadius: 2,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          backgroundColor: room.hasAc ? '#dbeafe' : '#fee2e2'
-                        }}>
-                          <Typography sx={{ fontSize: '1.3rem' }}>
-                            {room.hasAc ? "❄️" : "🌡️"}
-                          </Typography>
-                        </Box>
-                        <Box>
-                          <Typography sx={{ fontSize: '0.75rem', color: '#6c757d', mb: 0.2, fontWeight: 500 }}>
-                            เครื่องปรับอากาศ
-                          </Typography>
-                          <Typography sx={{ fontWeight: 600, color: '#2c3e50', fontSize: '0.95rem' }}>
-                            {room.hasAc ? 'มี' : 'ไม่มี'}
-                          </Typography>
-                        </Box>
+                      <Box sx={{ mb: 2, p: 1.5, borderRadius: 1.5, bgcolor: '#f8fafc', border: '1px solid #f1f5f9' }}>
+                        <Typography sx={{ fontSize: '0.65rem', color: '#94a3b8', mb: 0.25, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                          เครื่องปรับอากาศ
+                        </Typography>
+                        <Typography sx={{ fontWeight: 600, color: '#1a1a2e', fontSize: '0.875rem' }}>
+                          {room.hasAc ? 'มี' : 'ไม่มี'}
+                        </Typography>
                       </Box>
-                      
-                      <Box sx={{ 
-                        display: 'grid', 
-                        gridTemplateColumns: '1fr 1fr', 
-                        gap: 2 
-                      }}>
-                        <Box sx={{
-                          p: 2.5,
-                          borderRadius: 2,
-                          backgroundColor: '#f8f9fa',
-                          border: '2px solid #e9ecef',
-                          transition: 'all 0.2s ease',
-                          '&:hover': {
-                            borderColor: '#10b981',
-                            backgroundColor: '#ecfdf5'
-                          }
-                        }}>
-                          <Typography sx={{ fontSize: '0.75rem', color: '#6c757d', mb: 0.5, fontWeight: 600 }}>
+
+                      <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1.5 }}>
+                        <Box sx={{ p: 1.5, borderRadius: 1.5, bgcolor: '#f8fafc', border: '1px solid #f1f5f9' }}>
+                          <Typography sx={{ fontSize: '0.65rem', color: '#94a3b8', mb: 0.25, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                             รายวัน
                           </Typography>
-                          <Typography sx={{ fontWeight: 700, color: '#2c3e50', fontSize: '1.2rem', letterSpacing: '-0.5px' }}>
+                          <Typography sx={{ fontWeight: 700, color: '#1a1a2e', fontSize: '1rem', letterSpacing: '-0.01em' }}>
                             ฿{room.dailyRate.toLocaleString()}
                           </Typography>
                         </Box>
-                        
-                        <Box sx={{
-                          p: 2.5,
-                          borderRadius: 2,
-                          backgroundColor: '#f8f9fa',
-                          border: '2px solid #e9ecef',
-                          transition: 'all 0.2s ease',
-                          '&:hover': {
-                            borderColor: '#f59e0b',
-                            backgroundColor: '#fef3c7'
-                          }
-                        }}>
-                          <Typography sx={{ fontSize: '0.75rem', color: '#6c757d', mb: 0.5, fontWeight: 600 }}>
+
+                        <Box sx={{ p: 1.5, borderRadius: 1.5, bgcolor: '#f8fafc', border: '1px solid #f1f5f9' }}>
+                          <Typography sx={{ fontSize: '0.65rem', color: '#94a3b8', mb: 0.25, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                             รายเดือน
                           </Typography>
-                          <Typography sx={{ fontWeight: 700, color: '#2c3e50', fontSize: '1.2rem', letterSpacing: '-0.5px' }}>
+                          <Typography sx={{ fontWeight: 700, color: '#1a1a2e', fontSize: '1rem', letterSpacing: '-0.01em' }}>
                             ฿{room.monthlyRate.toLocaleString()}
                           </Typography>
                         </Box>
                       </Box>
                     </Box>
                   )}
-                  
+
                   {room.status === "rented" && room.rentalInfo && (
-                    <Box sx={{ 
-                      p: 3, 
-                      borderRadius: 2, 
-                      backgroundColor: '#f8f9fa',
-                      border: '1px solid #e9ecef'
-                    }}>
-                      <Typography sx={{ fontWeight: 700, mb: 2, color: '#2c3e50', fontSize: '0.95rem' }}>
-                        ข้อมูลการเช่า
-                      </Typography>
-                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-                        <Box>
-                          <Typography sx={{ fontSize: '0.7rem', color: '#6c757d', mb: 0.3, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                            ผู้เช่า
+                    <Box>
+                      <Box sx={{ p: 1.5, borderRadius: 1.5, bgcolor: '#f8fafc', border: '1px solid #f1f5f9', mb: 1.5 }}>
+                        <Typography sx={{ fontSize: '0.65rem', color: '#94a3b8', mb: 0.25, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                          ผู้เช่า
+                        </Typography>
+                        <Typography sx={{ fontWeight: 600, color: '#1a1a2e', fontSize: '0.875rem' }}>
+                          {room.rentalInfo.customerName}
+                        </Typography>
+                      </Box>
+
+                      <Box sx={{ p: 1.5, borderRadius: 1.5, bgcolor: '#f8fafc', border: '1px solid #f1f5f9', mb: 1.5 }}>
+                        <Typography sx={{ fontSize: '0.65rem', color: '#94a3b8', mb: 0.25, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                          ประเภท
+                        </Typography>
+                        <Typography sx={{ fontWeight: 600, color: '#1a1a2e', fontSize: '0.875rem' }}>
+                          {room.rentalInfo.rentType === 'daily' ? 'รายวัน' : 'รายเดือน'}
+                        </Typography>
+                      </Box>
+
+                      <Box sx={{ display: 'flex', gap: 1.5 }}>
+                        <Box sx={{ flex: 1, p: 1.5, borderRadius: 1.5, bgcolor: '#f0fdf4', border: '1px solid #dcfce7' }}>
+                          <Typography sx={{ fontSize: '0.65rem', color: '#16a34a', mb: 0.25, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                            เข้า
                           </Typography>
-                          <Typography variant="body2" sx={{ fontWeight: 600, color: '#2c3e50' }}>
-                            {room.rentalInfo.customerName}
+                          <Typography sx={{ fontWeight: 700, color: '#15803d', fontSize: '0.8rem' }}>
+                            {formatThaiDate(room.rentalInfo.checkinDate)}
                           </Typography>
                         </Box>
-                        <Box>
-                          <Typography sx={{ fontSize: '0.7rem', color: '#6c757d', mb: 0.3, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                            ประเภท
+                        <Box sx={{ flex: 1, p: 1.5, borderRadius: 1.5, bgcolor: '#fef2f2', border: '1px solid #fecaca' }}>
+                          <Typography sx={{ fontSize: '0.65rem', color: '#dc2626', mb: 0.25, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                            ออก
                           </Typography>
-                          <Typography variant="body2" sx={{ fontWeight: 600, color: '#2c3e50' }}>
-                            {room.rentalInfo.rentType === 'daily' ? 'รายวัน' : 'รายเดือน'}
+                          <Typography sx={{ fontWeight: 700, color: '#b91c1c', fontSize: '0.8rem' }}>
+                            {formatThaiDate(room.rentalInfo.checkoutDate)}
                           </Typography>
-                        </Box>
-                        <Box sx={{ display: 'flex', gap: 2, mt: 0.5 }}>
-                          <Box sx={{ flex: 1 }}>
-                            <Typography sx={{ fontSize: '0.7rem', color: '#6c757d', mb: 0.3, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                              เข้า
-                            </Typography>
-                            <Typography variant="body2" sx={{ fontWeight: 600, color: '#10b981', fontSize: '0.85rem' }}>
-                              {room.rentalInfo.checkinDate}
-                            </Typography>
-                          </Box>
-                          <Box sx={{ flex: 1 }}>
-                            <Typography sx={{ fontSize: '0.7rem', color: '#6c757d', mb: 0.3, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                              ออก
-                            </Typography>
-                            <Typography variant="body2" sx={{ fontWeight: 600, color: '#ef4444', fontSize: '0.85rem' }}>
-                              {room.rentalInfo.checkoutDate}
-                            </Typography>
-                          </Box>
                         </Box>
                       </Box>
                     </Box>
                   )}
                 </Box>
 
-                <Box sx={{ 
-                  p: 3,
-                  pt: 0,
-                  display: 'flex', 
-                  gap: 1.5,
-                  flexWrap: 'wrap'
-                }}>
+                <Box sx={{ p: 2, pt: 0, display: 'flex', gap: 1, flexWrap: 'wrap' }}>
                   {room.status === "available" && (
-                    <Button
-                      variant="contained"
-                      fullWidth
-                      sx={{ 
-                        py: 1.3,
-                        borderRadius: 2,
-                        backgroundColor: '#2c3e50',
-                        color: '#fff',
-                        fontWeight: 600,
-                        fontSize: '0.9rem',
-                        textTransform: 'none',
-                        boxShadow: '0 4px 12px rgba(44, 62, 80, 0.3)',
-                        '&:hover': { 
-                          backgroundColor: '#1a252f',
-                          boxShadow: '0 6px 16px rgba(44, 62, 80, 0.4)',
-                          transform: 'translateY(-2px)'
-                        },
-                        transition: 'all 0.2s ease'
-                      }}
-                      onClick={() => handleRentClick(room.roomId)}
-                    >
+                    <Button variant="contained" fullWidth sx={{ py: 0.875, borderRadius: 1.5, bgcolor: '#1a1a2e', color: '#ffffff', fontSize: '0.875rem' }} onClick={() => handleRentClick(room.roomId)}>
                       เช่าห้องนี้
                     </Button>
                   )}
-                  
+
                   {room.status !== "rented" && (
                     <>
-                      <Button
-                        variant="outlined"
-                        sx={{ 
-                          flex: 1,
-                          py: 1.3,
-                          borderRadius: 2,
-                          borderColor: '#dee2e6',
-                          borderWidth: 1.5,
-                          color: '#2c3e50',
-                          fontWeight: 600,
-                          fontSize: '0.9rem',
-                          textTransform: 'none',
-                          '&:hover': { 
-                            borderColor: '#2c3e50',
-                            borderWidth: 1.5,
-                            backgroundColor: '#f8f9fa',
-                            transform: 'translateY(-2px)'
-                          },
-                          transition: 'all 0.2s ease'
-                        }}
-                        onClick={() => handleEditClick(room.roomId)}
-                      >
-                        แก้ไข
-                      </Button>
-                      <Button
-                        variant="outlined"
-                        sx={{ 
-                          flex: 1,
-                          py: 1.3,
-                          borderRadius: 2,
-                          borderColor: '#dee2e6',
-                          borderWidth: 1.5,
-                          color: '#6c757d',
-                          fontWeight: 600,
-                          fontSize: '0.9rem',
-                          textTransform: 'none',
-                          '&:hover': { 
-                            borderColor: '#ef4444',
-                            borderWidth: 1.5,
-                            color: '#ef4444',
-                            backgroundColor: '#fef2f2',
-                            transform: 'translateY(-2px)'
-                          },
-                          transition: 'all 0.2s ease'
-                        }}
-                        onClick={() => handleDelete(room.roomId)}
-                      >
-                        ลบ
-                      </Button>
+                      <Button variant="outlined" sx={{ flex: 1, py: 0.875, fontSize: '0.875rem' }} onClick={() => handleEditClick(room.roomId)}>แก้ไข</Button>
+                      <Button variant="outlined" sx={{ flex: 1, py: 0.875, color: '#dc2626', borderColor: '#dc2626', fontSize: '0.875rem', '&:over': { borderColor: '#b91c1c', bgcolor: '#fef2f2' } }} onClick={() => handleDelete(room.roomId)}>ลบ</Button>
                     </>
                   )}
-                  
+
                   {room.status === "rented" && (
-                    <Button
-                      variant="outlined"
-                      fullWidth
-                      sx={{ 
-                        py: 1.3,
-                        borderRadius: 2,
-                        borderColor: '#dee2e6',
-                        borderWidth: 1.5,
-                        color: '#2c3e50',
-                        fontWeight: 600,
-                        fontSize: '0.9rem',
-                        textTransform: 'none',
-                        '&:hover': { 
-                          borderColor: '#2c3e50',
-                          borderWidth: 1.5,
-                          backgroundColor: '#f8f9fa',
-                          transform: 'translateY(-2px)'
-                        },
-                        transition: 'all 0.2s ease'
-                      }}
-                      onClick={() => handleViewRental(room.roomId)}
-                    >
+                    <Button variant="outlined" fullWidth sx={{ py: 0.875, borderRadius: 1.5, fontSize: '0.875rem' }} onClick={() => handleViewRental(room.roomId)}>
                       ดูรายละเอียด
                     </Button>
                   )}

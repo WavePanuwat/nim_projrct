@@ -53,7 +53,7 @@ const AddCustomerPage = () => {
       sx={{
         display: "flex",
         minHeight: "100vh",
-        bgcolor: "#fafafa"
+        bgcolor: "#f8fafc"
       }}
     >
       <Sidebar role="ADMIN" />
@@ -64,49 +64,52 @@ const AddCustomerPage = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          p: 4,
+          p: { xs: 2, md: 3 },
         }}
       >
         <Paper
           elevation={0}
           sx={{
             width: "100%",
-            maxWidth: 600,
-            p: 5,
-            borderRadius: 3,
-            border: "1px solid #e5e7eb",
-            bgcolor: "#fff"
+            maxWidth: 500,
+            p: { xs: 3, md: 4 },
+            borderRadius: 2,
+            border: "1px solid #e2e8f0",
+            bgcolor: "#fff",
+            boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)"
           }}
         >
-          <Box sx={{ mb: 4 }}>
+          <Box sx={{ mb: 3 }}>
             <Typography
-              variant="h4"
+              variant="h5"
               sx={{
-                fontWeight: 600,
-                color: "#111827",
+                fontWeight: 700,
+                color: "#0f172a",
                 letterSpacing: "-0.02em",
-                mb: 1
+                mb: 0.5,
+                fontSize: { xs: "1.25rem", md: "1.5rem" }
               }}
             >
               เพิ่มลูกค้าใหม่
             </Typography>
-            <Typography variant="body2" sx={{ color: "#6b7280" }}>
+            <Typography variant="body2" sx={{ color: "#64748b", fontSize: "0.85rem" }}>
               กรอกข้อมูลลูกค้าให้ครบถ้วน
             </Typography>
           </Box>
 
-          <Divider sx={{ mb: 4 }} />
+          <Divider sx={{ mb: 3, borderColor: "#e2e8f0" }} />
 
           <form onSubmit={handleSave}>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}>
               
               <Box>
                 <Typography 
                   variant="body2" 
                   sx={{ 
-                    mb: 1.5, 
-                    fontWeight: 500, 
-                    color: "#374151" 
+                    mb: 1, 
+                    fontWeight: 600, 
+                    color: "#334155",
+                    fontSize: "0.8rem"
                   }}
                 >
                   รหัสบัตรประชาชน
@@ -116,17 +119,19 @@ const AddCustomerPage = () => {
                   value={formData.idCard}
                   onChange={handleChange}
                   fullWidth
+                  size="small"
                   required
                   placeholder="เลขบัตรประชาชน 13 หลัก"
                   inputProps={{ maxLength: 13 }}
                   sx={{
                     "& .MuiOutlinedInput-root": {
-                      bgcolor: "#fafafa",
-                      borderRadius: 2,
-                      "& fieldset": { borderColor: "#e5e7eb" },
-                      "&:hover fieldset": { borderColor: "#d1d5db" },
+                      bgcolor: "#f8fafc",
+                      borderRadius: 1.5,
+                      fontSize: "0.9rem",
+                      "& fieldset": { borderColor: "#e2e8f0" },
+                      "&:hover fieldset": { borderColor: "#cbd5e1" },
                       "&.Mui-focused fieldset": { 
-                        borderColor: "#111827",
+                        borderColor: "#0f172a",
                         borderWidth: "1.5px"
                       }
                     }
@@ -134,14 +139,15 @@ const AddCustomerPage = () => {
                 />
               </Box>
 
-              <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2 }}>
+              <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" }, gap: 2 }}>
                 <Box>
                   <Typography 
                     variant="body2" 
                     sx={{ 
-                      mb: 1.5, 
-                      fontWeight: 500, 
-                      color: "#374151" 
+                      mb: 1, 
+                      fontWeight: 600, 
+                      color: "#334155",
+                      fontSize: "0.8rem"
                     }}
                   >
                     ชื่อ
@@ -151,16 +157,18 @@ const AddCustomerPage = () => {
                     value={formData.firstname}
                     onChange={handleChange}
                     fullWidth
+                    size="small"
                     required
                     placeholder="ชื่อจริง"
                     sx={{
                       "& .MuiOutlinedInput-root": {
-                        bgcolor: "#fafafa",
-                        borderRadius: 2,
-                        "& fieldset": { borderColor: "#e5e7eb" },
-                        "&:hover fieldset": { borderColor: "#d1d5db" },
+                        bgcolor: "#f8fafc",
+                        borderRadius: 1.5,
+                        fontSize: "0.9rem",
+                        "& fieldset": { borderColor: "#e2e8f0" },
+                        "&:hover fieldset": { borderColor: "#cbd5e1" },
                         "&.Mui-focused fieldset": { 
-                          borderColor: "#111827",
+                          borderColor: "#0f172a",
                           borderWidth: "1.5px"
                         }
                       }
@@ -172,9 +180,10 @@ const AddCustomerPage = () => {
                   <Typography 
                     variant="body2" 
                     sx={{ 
-                      mb: 1.5, 
-                      fontWeight: 500, 
-                      color: "#374151" 
+                      mb: 1, 
+                      fontWeight: 600, 
+                      color: "#334155",
+                      fontSize: "0.8rem"
                     }}
                   >
                     นามสกุล
@@ -184,16 +193,18 @@ const AddCustomerPage = () => {
                     value={formData.lastname}
                     onChange={handleChange}
                     fullWidth
+                    size="small"
                     required
                     placeholder="นามสกุล"
                     sx={{
                       "& .MuiOutlinedInput-root": {
-                        bgcolor: "#fafafa",
-                        borderRadius: 2,
-                        "& fieldset": { borderColor: "#e5e7eb" },
-                        "&:hover fieldset": { borderColor: "#d1d5db" },
+                        bgcolor: "#f8fafc",
+                        borderRadius: 1.5,
+                        fontSize: "0.9rem",
+                        "& fieldset": { borderColor: "#e2e8f0" },
+                        "&:hover fieldset": { borderColor: "#cbd5e1" },
                         "&.Mui-focused fieldset": { 
-                          borderColor: "#111827",
+                          borderColor: "#0f172a",
                           borderWidth: "1.5px"
                         }
                       }
@@ -202,14 +213,15 @@ const AddCustomerPage = () => {
                 </Box>
               </Box>
 
-              <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2 }}>
+              <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" }, gap: 2 }}>
                 <Box>
                   <Typography 
                     variant="body2" 
                     sx={{ 
-                      mb: 1.5, 
-                      fontWeight: 500, 
-                      color: "#374151" 
+                      mb: 1, 
+                      fontWeight: 600, 
+                      color: "#334155",
+                      fontSize: "0.8rem"
                     }}
                   >
                     เบอร์โทร
@@ -219,17 +231,19 @@ const AddCustomerPage = () => {
                     value={formData.phone}
                     onChange={handleChange}
                     fullWidth
+                    size="small"
                     required
                     placeholder="0xx-xxx-xxxx"
                     inputProps={{ maxLength: 10 }}
                     sx={{
                       "& .MuiOutlinedInput-root": {
-                        bgcolor: "#fafafa",
-                        borderRadius: 2,
-                        "& fieldset": { borderColor: "#e5e7eb" },
-                        "&:hover fieldset": { borderColor: "#d1d5db" },
+                        bgcolor: "#f8fafc",
+                        borderRadius: 1.5,
+                        fontSize: "0.9rem",
+                        "& fieldset": { borderColor: "#e2e8f0" },
+                        "&:hover fieldset": { borderColor: "#cbd5e1" },
                         "&.Mui-focused fieldset": { 
-                          borderColor: "#111827",
+                          borderColor: "#0f172a",
                           borderWidth: "1.5px"
                         }
                       }
@@ -241,9 +255,10 @@ const AddCustomerPage = () => {
                   <Typography 
                     variant="body2" 
                     sx={{ 
-                      mb: 1.5, 
-                      fontWeight: 500, 
-                      color: "#374151" 
+                      mb: 1, 
+                      fontWeight: 600, 
+                      color: "#334155",
+                      fontSize: "0.8rem"
                     }}
                   >
                     รหัสผ่าน
@@ -254,16 +269,18 @@ const AddCustomerPage = () => {
                     value={formData.password}
                     onChange={handleChange}
                     fullWidth
+                    size="small"
                     required
                     placeholder="••••••••"
                     sx={{
                       "& .MuiOutlinedInput-root": {
-                        bgcolor: "#fafafa",
-                        borderRadius: 2,
-                        "& fieldset": { borderColor: "#e5e7eb" },
-                        "&:hover fieldset": { borderColor: "#d1d5db" },
+                        bgcolor: "#f8fafc",
+                        borderRadius: 1.5,
+                        fontSize: "0.9rem",
+                        "& fieldset": { borderColor: "#e2e8f0" },
+                        "&:hover fieldset": { borderColor: "#cbd5e1" },
                         "&.Mui-focused fieldset": { 
-                          borderColor: "#111827",
+                          borderColor: "#0f172a",
                           borderWidth: "1.5px"
                         }
                       }
@@ -276,9 +293,10 @@ const AddCustomerPage = () => {
                 <Typography 
                   variant="body2" 
                   sx={{ 
-                    mb: 1.5, 
-                    fontWeight: 500, 
-                    color: "#374151" 
+                    mb: 1, 
+                    fontWeight: 600, 
+                    color: "#334155",
+                    fontSize: "0.8rem"
                   }}
                 >
                   ที่อยู่
@@ -288,18 +306,20 @@ const AddCustomerPage = () => {
                   value={formData.address}
                   onChange={handleChange}
                   fullWidth
+                  size="small"
                   multiline
-                  rows={3}
+                  rows={2.5}
                   required
                   placeholder="ที่อยู่เต็ม รวมถึงตำบล อำเภอ จังหวัด และรหัสไปรษณีย์"
                   sx={{
                     "& .MuiOutlinedInput-root": {
-                      bgcolor: "#fafafa",
-                      borderRadius: 2,
-                      "& fieldset": { borderColor: "#e5e7eb" },
-                      "&:hover fieldset": { borderColor: "#d1d5db" },
+                      bgcolor: "#f8fafc",
+                      borderRadius: 1.5,
+                      fontSize: "0.85rem",
+                      "& fieldset": { borderColor: "#e2e8f0" },
+                      "&:hover fieldset": { borderColor: "#cbd5e1" },
                       "&.Mui-focused fieldset": { 
-                        borderColor: "#111827",
+                        borderColor: "#0f172a",
                         borderWidth: "1.5px"
                       }
                     }
@@ -311,38 +331,37 @@ const AddCustomerPage = () => {
                 sx={{
                   display: "flex",
                   gap: 2,
-                  mt: 2,
-                  pt: 4,
-                  borderTop: "1px solid #e5e7eb"
+                  mt: 1,
+                  pt: 3,
+                  borderTop: "1px solid #e2e8f0"
                 }}
               >
-
                 <Button
                   type="submit"
                   variant="contained"
                   fullWidth
                   disabled={saving}
                   sx={{
-                    py: 1.5,
+                    py: 1.2,
                     fontWeight: 600,
-                    fontSize: 15,
-                    borderRadius: 2,
-                    bgcolor: "#111827",
+                    fontSize: "0.9rem",
+                    borderRadius: 1.5,
+                    bgcolor: "#0f172a",
                     color: "#fff",
                     textTransform: "none",
                     boxShadow: "none",
                     "&:hover": { 
-                      bgcolor: "#1f2937",
-                      boxShadow: "0 2px 8px rgba(0,0,0,0.15)"
+                      bgcolor: "#1e293b",
+                      boxShadow: "0 2px 8px rgba(15, 23, 42, 0.2)"
                     },
                     "&:disabled": {
-                      bgcolor: "#e5e7eb",
-                      color: "#9ca3af"
+                      bgcolor: "#e2e8f0",
+                      color: "#94a3b8"
                     }
                   }}
                 >
                   {saving ? (
-                    <CircularProgress size={22} sx={{ color: "#9ca3af" }} />
+                    <CircularProgress size={20} sx={{ color: "#94a3b8" }} />
                   ) : (
                     "บันทึก"
                   )}
@@ -352,16 +371,16 @@ const AddCustomerPage = () => {
                   fullWidth
                   onClick={() => router.push("/admin_listcustomer")}
                   sx={{
-                    py: 1.5,
+                    py: 1.2,
                     fontWeight: 500,
-                    fontSize: 15,
-                    borderRadius: 2,
-                    borderColor: "#e5e7eb",
-                    color: "#6b7280",
+                    fontSize: "0.9rem",
+                    borderRadius: 1.5,
+                    borderColor: "#e2e8f0",
+                    color: "#64748b",
                     textTransform: "none",
                     "&:hover": { 
-                      bgcolor: "#fafafa",
-                      borderColor: "#d1d5db"
+                      bgcolor: "#f8fafc",
+                      borderColor: "#cbd5e1"
                     }
                   }}
                 >

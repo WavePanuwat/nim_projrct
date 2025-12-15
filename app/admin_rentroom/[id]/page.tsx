@@ -20,7 +20,6 @@ import {
 } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import Sidebar from "@/app/utils/components/sidebar";
 
 interface Customer { customerId: number; firstname: string; lastname: string; }
@@ -156,48 +155,48 @@ const RentRoomPage: React.FC = () => {
     } finally { setLoading(false); }
   };
 
-  const extrasTotal = Object.values(selectedExtras).reduce((sum, it) => sum + it.unitPrice * it.qty, 0);
-
   return (
     <Box sx={{ 
       display: "flex", 
       minHeight: "100vh", 
-      bgcolor: "#fafafa"
+      bgcolor: "#f8fafc"
     }}>
       <Sidebar role="ADMIN" />
       
-      <Container maxWidth="md" sx={{ py: 6 }}>
+      <Container maxWidth="sm" sx={{ py: { xs: 3, md: 4 } }}>
         <Paper 
           elevation={0}
           sx={{ 
-            p: 5, 
-            borderRadius: 3,
-            border: "1px solid #e5e7eb",
-            bgcolor: "#fff"
+            p: { xs: 3, md: 4 }, 
+            borderRadius: 2,
+            border: "1px solid #e2e8f0",
+            bgcolor: "#ffffff",
+            boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)"
           }}
         >
-          {/* Header */}
-          <Box sx={{ mb: 5 }}>
+          <Box sx={{ mb: 3 }}>
             <Typography 
-              variant="h4" 
+              variant="h5" 
               sx={{ 
-                fontWeight: 600,
-                color: "#111827",
+                fontWeight: 700,
+                color: "#0f172a",
                 letterSpacing: "-0.02em",
-                mb: 1
+                mb: 0.5,
+                fontSize: { xs: "1.25rem", md: "1.5rem" }
               }}
             >
               เช่าห้องพัก
             </Typography>
             <Box 
               sx={{ 
-                color: "#6b7280",
+                color: "#64748b",
                 display: "flex",
                 alignItems: "center",
-                gap: 1
+                gap: 1,
+                flexWrap: "wrap"
               }}
             >
-              <Typography variant="body1" component="span">
+              <Typography variant="body2" sx={{ fontSize: "0.85rem" }}>
                 หมายเลขห้อง
               </Typography>
               <Chip 
@@ -205,24 +204,28 @@ const RentRoomPage: React.FC = () => {
                 size="small"
                 sx={{ 
                   fontWeight: 600,
-                  bgcolor: "#f3f4f6",
-                  color: "#111827"
+                  bgcolor: "#f8fafc",
+                  color: "#0f172a",
+                  border: "1px solid #e2e8f0",
+                  height: 24,
+                  fontSize: "0.75rem"
                 }}
               />
             </Box>
           </Box>
 
-          <Divider sx={{ mb: 4 }} />
+          <Divider sx={{ mb: 3, borderColor: "#e2e8f0" }} />
 
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}>
             
             <Box>
               <Typography 
                 variant="body2" 
                 sx={{ 
-                  mb: 1.5, 
-                  fontWeight: 500, 
-                  color: "#374151" 
+                  mb: 1, 
+                  fontWeight: 600, 
+                  color: "#334155",
+                  fontSize: "0.8rem"
                 }}
               >
                 ประเภทการเช่า
@@ -230,47 +233,46 @@ const RentRoomPage: React.FC = () => {
               <TextField 
                 select 
                 fullWidth 
+                size="small"
                 value={form.rentType}
                 onChange={(e) => handleRentTypeChange(e.target.value)}
                 SelectProps={{
                   displayEmpty: true,
                   renderValue: (value: any) => {
                     if (!value) {
-                      return <span style={{ color: "#9ca3af" }}>-- เลือกประเภท --</span>;
+                      return <span style={{ color: "#94a3b8" }}>เลือกประเภทการเช่า</span>;
                     }
                     return value === "daily" ? "รายวัน" : "รายเดือน";
                   }
                 }}
                 sx={{
                   "& .MuiOutlinedInput-root": {
-                    bgcolor: "#fafafa",
-                    borderRadius: 2,
-                    "& fieldset": { borderColor: "#e5e7eb" },
-                    "&:hover fieldset": { borderColor: "#d1d5db" },
+                    bgcolor: "#f8fafc",
+                    borderRadius: 1.5,
+                    fontSize: "0.85rem",
+                    "& fieldset": { borderColor: "#e2e8f0" },
+                    "&:hover fieldset": { borderColor: "#cbd5e1" },
                     "&.Mui-focused fieldset": { 
-                      borderColor: "#111827",
+                      borderColor: "#0f172a",
                       borderWidth: "1.5px"
                     }
                   }
                 }}
               >
-                <MenuItem value="" disabled>-- เลือกประเภท --</MenuItem>
+                <MenuItem value="" disabled>เลือกประเภทการเช่า</MenuItem>
                 <MenuItem value="daily">รายวัน</MenuItem>
                 <MenuItem value="monthly">รายเดือน</MenuItem>
               </TextField>
             </Box>
 
-            {/* Customer Selection */}
-
-            {/* Customer Selection */}
-            {/* Customer Selection */}
             <Box>
               <Typography 
                 variant="body2" 
                 sx={{ 
-                  mb: 1.5, 
-                  fontWeight: 500, 
-                  color: "#374151" 
+                  mb: 1, 
+                  fontWeight: 600, 
+                  color: "#334155",
+                  fontSize: "0.8rem"
                 }}
               >
                 ข้อมูลลูกค้า
@@ -278,6 +280,7 @@ const RentRoomPage: React.FC = () => {
               <TextField 
                 select 
                 fullWidth 
+                size="small"
                 name="customerId" 
                 value={form.customerId}
                 onChange={handleFieldChange}
@@ -285,26 +288,27 @@ const RentRoomPage: React.FC = () => {
                   displayEmpty: true,
                   renderValue: (value: any) => {
                     if (!value || value === 0) {
-                      return <span style={{ color: "#9ca3af" }}>-- เลือกลูกค้า --</span>;
+                      return <span style={{ color: "#94a3b8" }}>เลือกลูกค้า</span>;
                     }
                     const customer = customers.find(c => c.customerId === value);
-                    return customer ? `${customer.firstname} ${customer.lastname}` : "-- เลือกลูกค้า --";
+                    return customer ? `${customer.firstname} ${customer.lastname}` : "เลือกลูกค้า";
                   }
                 }}
                 sx={{
                   "& .MuiOutlinedInput-root": {
-                    bgcolor: "#fafafa",
-                    borderRadius: 2,
-                    "& fieldset": { borderColor: "#e5e7eb" },
-                    "&:hover fieldset": { borderColor: "#d1d5db" },
+                    bgcolor: "#f8fafc",
+                    borderRadius: 1.5,
+                    fontSize: "0.85rem",
+                    "& fieldset": { borderColor: "#e2e8f0" },
+                    "&:hover fieldset": { borderColor: "#cbd5e1" },
                     "&.Mui-focused fieldset": { 
-                      borderColor: "#111827",
+                      borderColor: "#0f172a",
                       borderWidth: "1.5px"
                     }
                   }
                 }}
               >
-                <MenuItem value={0} disabled>-- เลือกลูกค้า --</MenuItem>
+                <MenuItem value={0} disabled>เลือกลูกค้า</MenuItem>
                 {customers.map(c => (
                   <MenuItem key={c.customerId} value={c.customerId}>
                     {c.firstname} {c.lastname}
@@ -318,16 +322,18 @@ const RentRoomPage: React.FC = () => {
                 <Typography 
                   variant="body2" 
                   sx={{ 
-                    mb: 1.5, 
-                    fontWeight: 500, 
-                    color: "#374151" 
+                    mb: 1, 
+                    fontWeight: 600, 
+                    color: "#334155",
+                    fontSize: "0.8rem"
                   }}
                 >
                   ระยะเวลาการเช่า
                 </Typography>
-                <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2 }}>
+                <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" }, gap: 2 }}>
                   <TextField 
                     fullWidth 
+                    size="small"
                     label="วันที่เข้า" 
                     name="checkinDate" 
                     type="date"
@@ -336,12 +342,13 @@ const RentRoomPage: React.FC = () => {
                     onChange={handleFieldChange}
                     sx={{
                       "& .MuiOutlinedInput-root": {
-                        bgcolor: "#fafafa",
-                        borderRadius: 2,
-                        "& fieldset": { borderColor: "#e5e7eb" },
-                        "&:hover fieldset": { borderColor: "#d1d5db" },
+                        bgcolor: "#f8fafc",
+                        borderRadius: 1.5,
+                        fontSize: "0.85rem",
+                        "& fieldset": { borderColor: "#e2e8f0" },
+                        "&:hover fieldset": { borderColor: "#cbd5e1" },
                         "&.Mui-focused fieldset": { 
-                          borderColor: "#111827",
+                          borderColor: "#0f172a",
                           borderWidth: "1.5px"
                         }
                       }
@@ -349,6 +356,7 @@ const RentRoomPage: React.FC = () => {
                   />
                   <TextField 
                     fullWidth 
+                    size="small"
                     label="วันที่ออก" 
                     name="checkoutDate" 
                     type="date"
@@ -357,12 +365,13 @@ const RentRoomPage: React.FC = () => {
                     onChange={handleFieldChange}
                     sx={{
                       "& .MuiOutlinedInput-root": {
-                        bgcolor: "#fafafa",
-                        borderRadius: 2,
-                        "& fieldset": { borderColor: "#e5e7eb" },
-                        "&:hover fieldset": { borderColor: "#d1d5db" },
+                        bgcolor: "#f8fafc",
+                        borderRadius: 1.5,
+                        fontSize: "0.85rem",
+                        "& fieldset": { borderColor: "#e2e8f0" },
+                        "&:hover fieldset": { borderColor: "#cbd5e1" },
                         "&.Mui-focused fieldset": { 
-                          borderColor: "#111827",
+                          borderColor: "#0f172a",
                           borderWidth: "1.5px"
                         }
                       }
@@ -371,21 +380,24 @@ const RentRoomPage: React.FC = () => {
                 </Box>
               </Box>
             )}
+
             {showMonthFields && (
               <Box>
                 <Typography 
                   variant="body2" 
                   sx={{ 
-                    mb: 1.5, 
-                    fontWeight: 500, 
-                    color: "#374151" 
+                    mb: 1, 
+                    fontWeight: 600, 
+                    color: "#334155",
+                    fontSize: "0.8rem"
                   }}
                 >
                   ระยะเวลาการเช่า
                 </Typography>
-                <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2 }}>
+                <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr" }, gap: 2 }}>
                   <TextField 
                     fullWidth 
+                    size="small"
                     label="เดือนเริ่มต้น" 
                     name="startMonth" 
                     type="month"
@@ -394,12 +406,13 @@ const RentRoomPage: React.FC = () => {
                     onChange={handleFieldChange}
                     sx={{
                       "& .MuiOutlinedInput-root": {
-                        bgcolor: "#fafafa",
-                        borderRadius: 2,
-                        "& fieldset": { borderColor: "#e5e7eb" },
-                        "&:hover fieldset": { borderColor: "#d1d5db" },
+                        bgcolor: "#f8fafc",
+                        borderRadius: 1.5,
+                        fontSize: "0.85rem",
+                        "& fieldset": { borderColor: "#e2e8f0" },
+                        "&:hover fieldset": { borderColor: "#cbd5e1" },
                         "&.Mui-focused fieldset": { 
-                          borderColor: "#111827",
+                          borderColor: "#0f172a",
                           borderWidth: "1.5px"
                         }
                       }
@@ -407,6 +420,7 @@ const RentRoomPage: React.FC = () => {
                   />
                   <TextField 
                     fullWidth 
+                    size="small"
                     label="เดือนสิ้นสุด" 
                     name="endMonth" 
                     type="month"
@@ -415,12 +429,13 @@ const RentRoomPage: React.FC = () => {
                     onChange={handleFieldChange}
                     sx={{
                       "& .MuiOutlinedInput-root": {
-                        bgcolor: "#fafafa",
-                        borderRadius: 2,
-                        "& fieldset": { borderColor: "#e5e7eb" },
-                        "&:hover fieldset": { borderColor: "#d1d5db" },
+                        bgcolor: "#f8fafc",
+                        borderRadius: 1.5,
+                        fontSize: "0.85rem",
+                        "& fieldset": { borderColor: "#e2e8f0" },
+                        "&:hover fieldset": { borderColor: "#cbd5e1" },
                         "&.Mui-focused fieldset": { 
-                          borderColor: "#111827",
+                          borderColor: "#0f172a",
                           borderWidth: "1.5px"
                         }
                       }
@@ -431,14 +446,15 @@ const RentRoomPage: React.FC = () => {
             )}
 
             {form.rentType && (
-              <Box sx={{ mt: 2 }}>
-                <Divider sx={{ mb: 3 }} />
+              <Box sx={{ mt: 1 }}>
+                <Divider sx={{ mb: 2.5, borderColor: "#e2e8f0" }} />
                 <Typography 
                   variant="body2" 
                   sx={{ 
-                    mb: 2.5, 
-                    fontWeight: 500, 
-                    color: "#374151" 
+                    mb: 2, 
+                    fontWeight: 600, 
+                    color: "#334155",
+                    fontSize: "0.8rem"
                   }}
                 >
                   อุปกรณ์/บริการเสริม (ถ้ามี)
@@ -449,12 +465,12 @@ const RentRoomPage: React.FC = () => {
                     sx={{ 
                       p: 4, 
                       textAlign: "center", 
-                      bgcolor: "#fafafa",
-                      borderRadius: 2,
-                      border: "1px dashed #e5e7eb"
+                      bgcolor: "#f8fafc",
+                      borderRadius: 1.5,
+                      border: "1px dashed #cbd5e1"
                     }}
                   >
-                    <Typography variant="body2" sx={{ color: "#9ca3af" }}>
+                    <Typography variant="body2" sx={{ color: "#94a3b8", fontSize: "0.8rem" }}>
                       ไม่มีรายการเสริมที่เลือกได้
                     </Typography>
                   </Box>
@@ -469,45 +485,48 @@ const RentRoomPage: React.FC = () => {
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "space-between",
-                            p: 2.5,
-                            borderRadius: 2,
+                            p: 2,
+                            borderRadius: 1.5,
                             border: "1px solid",
-                            borderColor: sel ? "#111827" : "#e5e7eb",
-                            bgcolor: sel ? "#fafafa" : "#fff",
+                            borderColor: sel ? "#0f172a" : "#e2e8f0",
+                            bgcolor: sel ? "#f8fafc" : "#ffffff",
                             transition: "all 0.2s ease",
+                            flexWrap: { xs: "wrap", md: "nowrap" },
+                            gap: 1.5,
                             "&:hover": {
-                              borderColor: sel ? "#111827" : "#d1d5db",
-                              bgcolor: "#fafafa"
+                              borderColor: sel ? "#0f172a" : "#cbd5e1",
+                              bgcolor: "#f8fafc"
                             }
                           }}
                         >
-                          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                          <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, flex: 1 }}>
                             <Checkbox 
                               checked={!!sel} 
                               onChange={() => toggleExtra(ex)}
+                              size="small"
                               sx={{ 
                                 p: 0,
-                                color: "#d1d5db",
-                                "&.Mui-checked": { color: "#111827" }
+                                color: "#cbd5e1",
+                                "&.Mui-checked": { color: "#0f172a" }
                               }}
                             />
-                            <Box>
-                              <Typography sx={{ fontWeight: 500, color: "#111827", mb: 0.5 }}>
+                            <Box sx={{ flex: 1 }}>
+                              <Typography sx={{ fontWeight: 600, color: "#0f172a", mb: 0.5, fontSize: "0.85rem" }}>
                                 {ex.name}
                               </Typography>
-                              <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-                                <Typography variant="caption" sx={{ color: "#6b7280" }}>
+                              <Box sx={{ display: "flex", gap: 1, alignItems: "center", flexWrap: "wrap" }}>
+                                <Typography variant="caption" sx={{ color: "#64748b", fontWeight: 500, fontSize: "0.75rem" }}>
                                   ฿{ex.price.toLocaleString()}
                                 </Typography>
-                                <Typography variant="caption" sx={{ color: "#d1d5db" }}>•</Typography>
                                 <Chip 
                                   label={ex.chargeType === "one-time" ? "ครั้งเดียว" : "รายเดือน"}
                                   size="small"
                                   sx={{ 
-                                    height: 20,
-                                    fontSize: "0.7rem",
-                                    bgcolor: "#f3f4f6",
-                                    color: "#6b7280"
+                                    height: 18,
+                                    fontSize: "0.65rem",
+                                    bgcolor: "#e2e8f0",
+                                    color: "#64748b",
+                                    fontWeight: 600
                                   }}
                                 />
                               </Box>
@@ -520,11 +539,13 @@ const RentRoomPage: React.FC = () => {
                                 size="small" 
                                 onClick={() => changeExtraQty(ex.extraId, -1)}
                                 sx={{ 
-                                  bgcolor: "#f3f4f6",
-                                  "&:hover": { bgcolor: "#e5e7eb" }
+                                  bgcolor: "#e2e8f0",
+                                  width: 28,
+                                  height: 28,
+                                  "&:hover": { bgcolor: "#cbd5e1" }
                                 }}
                               >
-                                <RemoveIcon fontSize="small" />
+                                <RemoveIcon sx={{ fontSize: 16 }} />
                               </IconButton>
                               
                               <TextField 
@@ -537,13 +558,16 @@ const RentRoomPage: React.FC = () => {
                                   style: { 
                                     textAlign: "center", 
                                     width: 40,
-                                    padding: "6px"
+                                    padding: "6px",
+                                    fontWeight: 600,
+                                    fontSize: "0.85rem"
                                   } 
                                 }}
                                 sx={{
                                   "& .MuiOutlinedInput-root": {
-                                    bgcolor: "#fff",
-                                    "& fieldset": { borderColor: "#e5e7eb" }
+                                    bgcolor: "#ffffff",
+                                    borderRadius: 1,
+                                    "& fieldset": { borderColor: "#e2e8f0" }
                                   }
                                 }}
                               />
@@ -552,20 +576,23 @@ const RentRoomPage: React.FC = () => {
                                 size="small" 
                                 onClick={() => changeExtraQty(ex.extraId, 1)}
                                 sx={{ 
-                                  bgcolor: "#f3f4f6",
-                                  "&:hover": { bgcolor: "#e5e7eb" }
+                                  bgcolor: "#e2e8f0",
+                                  width: 28,
+                                  height: 28,
+                                  "&:hover": { bgcolor: "#cbd5e1" }
                                 }}
                               >
-                                <AddIcon fontSize="small" />
+                                <AddIcon sx={{ fontSize: 16 }} />
                               </IconButton>
 
                               <Typography 
                                 sx={{ 
-                                  ml: 2, 
-                                  fontWeight: 600,
-                                  color: "#111827",
+                                  ml: 1, 
+                                  fontWeight: 700,
+                                  color: "#0f172a",
                                   minWidth: 70,
-                                  textAlign: "right"
+                                  textAlign: "right",
+                                  fontSize: "0.85rem"
                                 }}
                               >
                                 ฿{(sel.unitPrice * sel.qty).toLocaleString()}
@@ -580,12 +607,14 @@ const RentRoomPage: React.FC = () => {
               </Box>
             )}
           </Box>
+
           <Box sx={{ 
             display: "flex", 
             gap: 2, 
-            mt: 5,
-            pt: 4,
-            borderTop: "1px solid #e5e7eb"
+            mt: 4,
+            pt: 3,
+            borderTop: "1px solid #e2e8f0",
+            flexDirection: { xs: "column-reverse", sm: "row" }
           }}>
             <Button
               variant="contained"
@@ -593,28 +622,28 @@ const RentRoomPage: React.FC = () => {
               disabled={loading}
               onClick={submitRent}
               sx={{
-                py: 1.5,
+                py: 1.2,
                 fontWeight: 600,
-                fontSize: 15,
-                borderRadius: 2,
-                bgcolor: "#111827",
-                color: "#fff",
+                fontSize: "0.85rem",
+                borderRadius: 1.5,
+                bgcolor: "#0f172a",
+                color: "#ffffff",
                 textTransform: "none",
                 boxShadow: "none",
                 "&:hover": { 
-                  bgcolor: "#1f2937",
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.15)"
+                  bgcolor: "#1e293b",
+                  boxShadow: "0 2px 8px rgba(15, 23, 42, 0.2)"
                 },
                 "&:disabled": {
-                  bgcolor: "#e5e7eb",
-                  color: "#9ca3af"
+                  bgcolor: "#e2e8f0",
+                  color: "#94a3b8"
                 }
               }}
             >
               {loading ? (
-                <CircularProgress size={22} sx={{ color: "#9ca3af" }} />
+                <CircularProgress size={20} sx={{ color: "#94a3b8" }} />
               ) : (
-                "ยืนยัน"
+                "ยืนยันการเช่า"
               )}
             </Button>
 
@@ -623,16 +652,16 @@ const RentRoomPage: React.FC = () => {
               fullWidth
               onClick={() => router.push("/admin_home")}
               sx={{
-                py: 1.5,
-                fontWeight: 500,
-                fontSize: 15,
-                borderRadius: 2,
-                borderColor: "#e5e7eb",
-                color: "#6b7280",
+                py: 1.2,
+                fontWeight: 600,
+                fontSize: "0.85rem",
+                borderRadius: 1.5,
+                borderColor: "#e2e8f0",
+                color: "#64748b",
                 textTransform: "none",
                 "&:hover": { 
-                  bgcolor: "#fafafa",
-                  borderColor: "#d1d5db"
+                  bgcolor: "#f8fafc",
+                  borderColor: "#cbd5e1"
                 }
               }}
             >

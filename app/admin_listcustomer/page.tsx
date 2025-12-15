@@ -68,37 +68,40 @@ const ListCustomerPage = () => {
     <Box sx={{ 
       display: "flex", 
       minHeight: "100vh", 
-      background: "linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)"
+      bgcolor: "#f8fafc"
     }}>
       <Sidebar role="ADMIN" />
 
-      <Box sx={{ flexGrow: 1, p: 5 }}>
+      <Box sx={{ flexGrow: 1, p: { xs: 2.5, md: 4 } }}>
         <Paper sx={{
-          p: 5,
-          borderRadius: 3,
-          boxShadow: "0 4px 20px rgba(0,0,0,0.06)",
-          border: "1px solid rgba(0,0,0,0.04)",
+          p: { xs: 3, md: 4 },
+          borderRadius: 2,
+          boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)",
+          border: "1px solid #e2e8f0",
           backgroundColor: "#fff"
         }}>
           <Box sx={{ 
             display: "flex", 
             justifyContent: "space-between", 
             alignItems: "center",
-            mb: 4
+            mb: 3,
+            flexWrap: "wrap",
+            gap: 2
           }}>
             <Box>
               <Typography
-                variant="h4"
+                variant="h5"
                 sx={{
-                  fontWeight: 600,
-                  color: "#2c3e50",
-                  letterSpacing: "-0.5px",
-                  mb: 0.5
+                  fontWeight: 700,
+                  color: "#0f172a",
+                  letterSpacing: "-0.02em",
+                  mb: 0.5,
+                  fontSize: { xs: "1.25rem", md: "1.5rem" }
                 }}
               >
                 รายชื่อลูกค้า
               </Typography>
-              <Typography variant="body2" sx={{ color: "#6c757d" }}>
+              <Typography variant="body2" sx={{ color: "#64748b", fontSize: "0.85rem" }}>
                 จัดการข้อมูลลูกค้าทั้งหมด
               </Typography>
             </Box>
@@ -107,19 +110,20 @@ const ListCustomerPage = () => {
               variant="contained"
               onClick={handleAddClick}
               sx={{
-                backgroundColor: "#2c3e50",
+                backgroundColor: "#0f172a",
                 color: "white",
-                px: 4,
-                py: 1.5,
-                borderRadius: 2,
+                px: 3,
+                py: 1,
+                borderRadius: 1.5,
                 fontWeight: 600,
                 textTransform: "none",
-                boxShadow: "0 2px 8px rgba(44, 62, 80, 0.2)",
+                fontSize: "0.85rem",
+                boxShadow: "none",
                 transition: "all 0.2s ease",
                 "&:hover": {
-                  backgroundColor: "#34495e",
-                  transform: "translateY(-2px)",
-                  boxShadow: "0 4px 12px rgba(44, 62, 80, 0.3)",
+                  backgroundColor: "#1e293b",
+                  boxShadow: "0 2px 8px rgba(15, 23, 42, 0.2)",
+                  transform: "translateY(-1px)"
                 },
               }}
             >
@@ -129,62 +133,68 @@ const ListCustomerPage = () => {
           <TableContainer
             component={Paper}
             sx={{
-              borderRadius: 2,
+              borderRadius: 1.5,
               overflow: "hidden",
               boxShadow: "none",
-              border: "1px solid #e9ecef"
+              border: "1px solid #e2e8f0"
             }}
           >
-            <Table>
+            <Table size="small">
               <TableHead>
-                <TableRow sx={{ backgroundColor: "#f8f9fa" }}>
+                <TableRow sx={{ backgroundColor: "#f8fafc" }}>
                   <TableCell sx={{ 
-                    color: "#2c3e50", 
+                    color: "#0f172a", 
                     fontWeight: 600,
-                    fontSize: "0.875rem",
+                    fontSize: "0.75rem",
                     textTransform: "uppercase",
                     letterSpacing: "0.5px",
-                    borderBottom: "2px solid #e9ecef"
+                    borderBottom: "1px solid #e2e8f0",
+                    py: 1.5
                   }}>
                     รหัสบัตรประชาชน
                   </TableCell>
                   <TableCell sx={{ 
-                    color: "#2c3e50", 
+                    color: "#0f172a", 
                     fontWeight: 600,
-                    fontSize: "0.875rem",
+                    fontSize: "0.75rem",
                     textTransform: "uppercase",
                     letterSpacing: "0.5px",
-                    borderBottom: "2px solid #e9ecef"
+                    borderBottom: "1px solid #e2e8f0",
+                    py: 1.5
                   }}>
                     ชื่อ-นามสกุล
                   </TableCell>
                   <TableCell sx={{ 
-                    color: "#2c3e50", 
+                    color: "#0f172a", 
                     fontWeight: 600,
-                    fontSize: "0.875rem",
+                    fontSize: "0.75rem",
                     textTransform: "uppercase",
                     letterSpacing: "0.5px",
-                    borderBottom: "2px solid #e9ecef"
+                    borderBottom: "1px solid #e2e8f0",
+                    py: 1.5
                   }}>
                     เบอร์โทร
                   </TableCell>
                   <TableCell sx={{ 
-                    color: "#2c3e50", 
+                    color: "#0f172a", 
                     fontWeight: 600,
-                    fontSize: "0.875rem",
+                    fontSize: "0.75rem",
                     textTransform: "uppercase",
                     letterSpacing: "0.5px",
-                    borderBottom: "2px solid #e9ecef"
+                    borderBottom: "1px solid #e2e8f0",
+                    py: 1.5
                   }}>
                     ที่อยู่
                   </TableCell>
                   <TableCell sx={{ 
-                    color: "#2c3e50", 
+                    color: "#0f172a", 
                     fontWeight: 600,
-                    fontSize: "0.875rem",
+                    fontSize: "0.75rem",
                     textTransform: "uppercase",
                     letterSpacing: "0.5px",
-                    borderBottom: "2px solid #e9ecef"
+                    borderBottom: "1px solid #e2e8f0",
+                    py: 1.5,
+                    width: 180
                   }}>
                     จัดการ
                   </TableCell>
@@ -192,13 +202,13 @@ const ListCustomerPage = () => {
               </TableHead>
 
               <TableBody>
-                {customers.map((customer, index) => (
+                {customers.map((customer) => (
                   <TableRow
                     key={customer.customerId}
                     sx={{
                       transition: "all 0.2s ease",
                       "&:hover": {
-                        backgroundColor: "#f8f9fa",
+                        backgroundColor: "#f8fafc",
                       },
                       "&:last-child td": {
                         borderBottom: 0
@@ -206,79 +216,94 @@ const ListCustomerPage = () => {
                     }}
                   >
                     <TableCell sx={{ 
-                      color: "#495057",
-                      fontSize: "0.95rem",
-                      borderBottom: "1px solid #f1f3f5"
+                      color: "#475569",
+                      fontSize: "0.85rem",
+                      borderBottom: "1px solid #f1f5f9",
+                      py: 1.5
                     }}>
                       {customer.idCard}
                     </TableCell>
                     <TableCell sx={{ 
-                      color: "#2c3e50",
+                      color: "#0f172a",
                       fontWeight: 500,
-                      fontSize: "0.95rem",
-                      borderBottom: "1px solid #f1f3f5"
+                      fontSize: "0.85rem",
+                      borderBottom: "1px solid #f1f5f9",
+                      py: 1.5
                     }}>
                       {customer.firstname} {customer.lastname}
                     </TableCell>
                     <TableCell sx={{ 
-                      color: "#495057",
-                      fontSize: "0.95rem",
-                      borderBottom: "1px solid #f1f3f5"
+                      color: "#475569",
+                      fontSize: "0.85rem",
+                      borderBottom: "1px solid #f1f5f9",
+                      py: 1.5
                     }}>
                       {customer.phone}
                     </TableCell>
                     <TableCell sx={{ 
-                      color: "#6c757d",
-                      fontSize: "0.9rem",
-                      borderBottom: "1px solid #f1f3f5"
+                      color: "#64748b",
+                      fontSize: "0.8rem",
+                      borderBottom: "1px solid #f1f5f9",
+                      py: 1.5
                     }}>
                       {customer.address}
                     </TableCell>
-                    <TableCell sx={{ borderBottom: "1px solid #f1f3f5" }}>
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        sx={{
-                          mr: 1,
-                          borderRadius: 1.5,
-                          textTransform: "none",
-                          borderColor: "#dee2e6",
-                          color: "#2c3e50",
-                          fontWeight: 500,
-                          px: 2,
-                          transition: "all 0.2s ease",
-                          "&:hover": { 
-                            backgroundColor: "#f8f9fa",
-                            borderColor: "#2c3e50",
-                            transform: "translateY(-1px)"
-                          },
-                        }}
-                        onClick={() => handleEditClick(customer.customerId)}
-                      >
-                        แก้ไข
-                      </Button>
+                    <TableCell sx={{ borderBottom: "1px solid #f1f5f9", py: 1.5 }}>
+                      <Box sx={{ display: "flex", gap: 1 }}>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          sx={{
+                            minWidth: 70,
+                            borderRadius: 1,
+                            textTransform: "none",
+                            borderColor: "#3b82f6",
+                            bgcolor: "#ffffff",
+                            color: "#3b82f6",
+                            fontWeight: 600,
+                            fontSize: "0.75rem",
+                            px: 1.5,
+                            py: 0.5,
+                            transition: "all 0.2s ease",
+                            "&:hover": { 
+                              borderColor: "#2563eb",
+                              bgcolor: "#eff6ff",
+                              color: "#2563eb",
+                              transform: "translateY(-1px)"
+                            },
+                          }}
+                          onClick={() => handleEditClick(customer.customerId)}
+                        >
+                          แก้ไข
+                        </Button>
 
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        sx={{
-                          borderRadius: 1.5,
-                          textTransform: "none",
-                          borderColor: "#dee2e6",
-                          color: "#dc3545",
-                          fontWeight: 500,
-                          px: 2,
-                          transition: "all 0.2s ease",
-                          "&:hover": { 
-                            backgroundColor: "#fff5f5",
-                            borderColor: "#dc3545",
-                            transform: "translateY(-1px)"
-                          },
-                        }}
-                        onClick={() => handleDelete(customer.customerId)}
-                      >
-                        ลบ
-                      </Button>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          sx={{
+                            minWidth: 70,
+                            borderRadius: 1,
+                            textTransform: "none",
+                            borderColor: "#ef4444",
+                            bgcolor: "#ffffff",
+                            color: "#ef4444",
+                            fontWeight: 600,
+                            fontSize: "0.75rem",
+                            px: 1.5,
+                            py: 0.5,
+                            transition: "all 0.2s ease",
+                            "&:hover": { 
+                              borderColor: "#dc2626",
+                              bgcolor: "#fef2f2",
+                              color: "#dc2626",
+                              transform: "translateY(-1px)"
+                            },
+                          }}
+                          onClick={() => handleDelete(customer.customerId)}
+                        >
+                          ลบ
+                        </Button>
+                      </Box>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -289,10 +314,10 @@ const ListCustomerPage = () => {
           {customers.length === 0 && (
             <Box sx={{ 
               textAlign: "center", 
-              py: 8,
-              color: "#adb5bd"
+              py: 6,
+              color: "#94a3b8"
             }}>
-              <Typography sx={{ fontSize: 16, fontWeight: 500 }}>
+              <Typography sx={{ fontSize: "0.9rem", fontWeight: 500 }}>
                 ยังไม่มีข้อมูลลูกค้า
               </Typography>
             </Box>
