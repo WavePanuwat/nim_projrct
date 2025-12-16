@@ -16,7 +16,7 @@ import {
   Alert,
   Divider
 } from '@mui/material';
-import { ArrowBack, Receipt, Save } from '@mui/icons-material';
+import { ArrowBack, Save } from '@mui/icons-material';
 import Sidebar from '@/app/utils/components/sidebar';
 import { useRouter } from 'next/navigation';
 import withAuth from "@/app/utils/hocs/withAuth";
@@ -129,7 +129,6 @@ const AdminCreateInvoice: React.FC = () => {
       
       setSuccess('สร้างใบแจ้งหนี้สำเร็จ!');
       
-      // Redirect after 2 seconds
       setTimeout(() => {
         router.push('/admin_invoices');
       }, 2000);
@@ -144,112 +143,119 @@ const AdminCreateInvoice: React.FC = () => {
 
   if (!userSession || loading) {
     return (
-      <Box sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
+      <Box sx={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
         height: '100vh',
-        background: 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)'
+        bgcolor: '#fafafa'
       }}>
-        <CircularProgress sx={{ color: '#2c3e50' }} size={60} thickness={3.5} />
+        <CircularProgress sx={{ color: '#1a1a2e' }} size={50} thickness={4} />
       </Box>
     );
   }
 
   return (
-    <Box sx={{
-      display: 'flex',
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%)'
-    }}>
+    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#fafafa' }}>
       <Sidebar role="ADMIN" />
       
-      <Box component="main" sx={{
-        flexGrow: 1,
-        p: 5,
-        '@media (max-width: 600px)': { p: 3 }
-      }}>
+      <Box component="main" sx={{ flexGrow: 1, p: { xs: 2, md: 3 }, maxWidth: '900px', mx: 'auto', width: '100%' }}>
         {/* Header */}
-        <Box sx={{ mb: 4 }}>
+        <Box sx={{ mb: 2.5 }}>
           <Button
             startIcon={<ArrowBack />}
             onClick={() => router.push('/admin_invoices')}
             sx={{
-              mb: 2,
-              color: '#6c757d',
+              mb: 1.5,
+              color: '#64748b',
               textTransform: 'none',
               fontWeight: 500,
+              fontSize: '0.8rem',
               '&:hover': {
-                backgroundColor: '#f8f9fa'
+                bgcolor: 'transparent',
+                color: '#1a1a2e'
               }
             }}
           >
             กลับไปหน้ารายการใบแจ้งหนี้
           </Button>
 
-          <Typography
-            variant="h4"
-            sx={{
-              fontWeight: 600,
-              color: '#2c3e50',
-              letterSpacing: '-0.5px',
-              mb: 0.5,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 1.5
-            }}
-          >
-            <Receipt sx={{ fontSize: 35 }} />
+          <Typography variant="h5" sx={{ fontWeight: 600, color: '#1a1a2e', letterSpacing: '-0.02em', fontSize: { xs: '1.25rem', md: '1.5rem' }, mb: 0.25 }}>
             สร้างใบแจ้งหนี้ใหม่
           </Typography>
-          <Typography variant="body2" sx={{ color: '#6c757d', fontWeight: 400 }}>
+          <Typography variant="body2" sx={{ color: '#64748b', fontWeight: 400, fontSize: '0.8rem' }}>
             เลือกการเช่าและกรอกข้อมูลเพื่อสร้างใบแจ้งหนี้
           </Typography>
         </Box>
 
         {error && (
-          <Alert severity="error" sx={{ mb: 3, borderRadius: 2 }} onClose={() => setError('')}>
+          <Alert 
+            severity="error" 
+            sx={{ 
+              mb: 1.5, 
+              borderRadius: 1.5,
+              border: '1px solid #fecaca',
+              bgcolor: '#fef2f2',
+              fontSize: '0.8rem',
+              py: 0.5,
+              '& .MuiAlert-icon': { color: '#dc2626' }
+            }} 
+            onClose={() => setError('')}
+          >
             {error}
           </Alert>
         )}
         
         {success && (
-          <Alert severity="success" sx={{ mb: 3, borderRadius: 2 }} onClose={() => setSuccess('')}>
+          <Alert 
+            severity="success" 
+            sx={{ 
+              mb: 1.5, 
+              borderRadius: 1.5,
+              border: '1px solid #bbf7d0',
+              bgcolor: '#f0fdf4',
+              fontSize: '0.8rem',
+              py: 0.5,
+              '& .MuiAlert-icon': { color: '#16a34a' }
+            }} 
+            onClose={() => setSuccess('')}
+          >
             {success}
           </Alert>
         )}
 
         <Paper sx={{
-          p: 4,
-          borderRadius: 3,
-          backgroundColor: '#fff',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.06)',
-          maxWidth: 800
+          p: 2.5,
+          borderRadius: 1.5,
+          bgcolor: '#ffffff',
+          boxShadow: 'none',
+          border: '1px solid #f1f5f9'
         }}>
           <Box component="form" onSubmit={handleSubmit}>
-            <Box sx={{ mb: 4 }}>
-              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, color: '#2c3e50' }}>
+            <Box sx={{ mb: 2.5 }}>
+              <Typography variant="subtitle1" sx={{ mb: 1.5, fontWeight: 600, color: '#1a1a2e', fontSize: '0.9rem' }}>
                 ข้อมูลการเช่า
               </Typography>
               
-              <FormControl fullWidth>
+              <FormControl fullWidth size="small">
                 <InputLabel>เลือกการเช่า *</InputLabel>
                 <Select
                   value={formData.rentalId}
                   onChange={(e) => handleRentalChange(e.target.value)}
                   label="เลือกการเช่า *"
                   sx={{
-                    borderRadius: 2,
+                    borderRadius: 1.5,
+                    fontSize: '0.85rem',
                     '& .MuiOutlinedInput-notchedOutline': {
-                      borderColor: '#dee2e6'
+                      borderColor: '#e2e8f0'
                     }
                   }}
                 >
-                  <MenuItem value="">
+                  <MenuItem value="" sx={{ fontSize: '0.85rem' }}>
                     <em>-- เลือกการเช่า --</em>
                   </MenuItem>
                   {rentals.map((rental) => (
-                    <MenuItem key={rental.rentalId} value={rental.rentalId}>
+                    <MenuItem key={rental.rentalId} value={rental.rentalId} sx={{ fontSize: '0.85rem' }}>
                       ห้อง {rental.roomNumber} - {rental.customerName} 
                       ({rental.rentType === 'daily' ? 'รายวัน' : 'รายเดือน'})
                     </MenuItem>
@@ -260,53 +266,53 @@ const AdminCreateInvoice: React.FC = () => {
 
             {selectedRental && (
               <Box sx={{
-                mb: 4,
-                p: 3,
-                borderRadius: 2,
-                backgroundColor: '#f8f9fa',
-                border: '1px solid #dee2e6'
+                mb: 2.5,
+                p: 2,
+                borderRadius: 1.5,
+                bgcolor: '#f8fafc',
+                border: '1px solid #f1f5f9'
               }}>
-                <Typography variant="subtitle2" sx={{ mb: 2, fontWeight: 700, color: '#2c3e50' }}>
+                <Typography variant="subtitle2" sx={{ mb: 1.5, fontWeight: 600, color: '#1a1a2e', fontSize: '0.8rem' }}>
                   รายละเอียดการเช่า
                 </Typography>
                 
                 <Box sx={{ 
-                  display: 'flex', 
-                  flexWrap: 'wrap', 
-                  gap: 3 
+                  display: 'grid',
+                  gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
+                  gap: 2
                 }}>
-                  <Box sx={{ flex: '1 1 45%', minWidth: 200 }}>
-                    <Typography variant="body2" sx={{ color: '#6c757d', mb: 0.5 }}>
+                  <Box>
+                    <Typography variant="body2" sx={{ fontSize: '0.7rem', color: '#94a3b8', mb: 0.25, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                       หมายเลขห้อง
                     </Typography>
-                    <Typography variant="body1" sx={{ fontWeight: 600, color: '#2c3e50' }}>
+                    <Typography variant="body1" sx={{ fontWeight: 600, color: '#1a1a2e', fontSize: '0.8rem' }}>
                       {selectedRental.roomNumber}
                     </Typography>
                   </Box>
                   
-                  <Box sx={{ flex: '1 1 45%', minWidth: 200 }}>
-                    <Typography variant="body2" sx={{ color: '#6c757d', mb: 0.5 }}>
+                  <Box>
+                    <Typography variant="body2" sx={{ fontSize: '0.7rem', color: '#94a3b8', mb: 0.25, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                       ชื่อลูกค้า
                     </Typography>
-                    <Typography variant="body1" sx={{ fontWeight: 600, color: '#2c3e50' }}>
+                    <Typography variant="body1" sx={{ fontWeight: 600, color: '#1a1a2e', fontSize: '0.8rem' }}>
                       {selectedRental.customerName}
                     </Typography>
                   </Box>
                   
-                  <Box sx={{ flex: '1 1 45%', minWidth: 200 }}>
-                    <Typography variant="body2" sx={{ color: '#6c757d', mb: 0.5 }}>
+                  <Box>
+                    <Typography variant="body2" sx={{ fontSize: '0.7rem', color: '#94a3b8', mb: 0.25, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                       ประเภทการเช่า
                     </Typography>
-                    <Typography variant="body1" sx={{ fontWeight: 600, color: '#2c3e50' }}>
+                    <Typography variant="body1" sx={{ fontWeight: 600, color: '#1a1a2e', fontSize: '0.8rem' }}>
                       {selectedRental.rentType === 'daily' ? 'รายวัน' : 'รายเดือน'}
                     </Typography>
                   </Box>
                   
-                  <Box sx={{ flex: '1 1 45%', minWidth: 200 }}>
-                    <Typography variant="body2" sx={{ color: '#6c757d', mb: 0.5 }}>
+                  <Box>
+                    <Typography variant="body2" sx={{ fontSize: '0.7rem', color: '#94a3b8', mb: 0.25, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                       วันที่เช่า
                     </Typography>
-                    <Typography variant="body1" sx={{ fontWeight: 600, color: '#2c3e50' }}>
+                    <Typography variant="body1" sx={{ fontWeight: 600, color: '#1a1a2e', fontSize: '0.8rem' }}>
                       {new Date(selectedRental.checkinDate).toLocaleDateString('th-TH')}
                     </Typography>
                   </Box>
@@ -316,87 +322,112 @@ const AdminCreateInvoice: React.FC = () => {
 
             {selectedRental && selectedRental.rentType === 'monthly' && (
               <>
-                <Divider sx={{ my: 3 }} />
+                <Divider sx={{ my: 2.5, borderColor: '#f1f5f9' }} />
                 
-                <Box sx={{ mb: 3 }}>
-                  <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, color: '#2c3e50' }}>
+                <Box sx={{ mb: 2.5 }}>
+                  <Typography variant="subtitle1" sx={{ mb: 1, fontWeight: 600, color: '#1a1a2e', fontSize: '0.9rem' }}>
                     มิเตอร์น้ำและไฟ
                   </Typography>
                   
-                  <Typography variant="body2" sx={{ mb: 3, color: '#6c757d' }}>
+                  <Typography variant="body2" sx={{ mb: 2, color: '#64748b', fontSize: '0.8rem' }}>
                     สำหรับการเช่ารายเดือนเท่านั้น
                   </Typography>
 
                   <Box sx={{ 
-                    display: 'flex', 
-                    flexWrap: 'wrap', 
-                    gap: 3 
+                    display: 'grid',
+                    gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
+                    gap: 1.5
                   }}>
-                    <Box sx={{ flex: '1 1 45%', minWidth: 250 }}>
-                      <TextField
-                        fullWidth
-                        label="หน่วยน้ำ (ยูนิต) *"
-                        type="number"
-                        value={formData.waterUnit}
-                        onChange={(e) => setFormData({ ...formData, waterUnit: e.target.value })}
-                        InputProps={{
-                          inputProps: { min: 0 }
-                        }}
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            borderRadius: 2
-                          }
-                        }}
-                        helperText="อัตรา: 3 บาท/ยูนิต"
-                      />
-                    </Box>
+                    <TextField
+                      fullWidth
+                      size="small"
+                      label="หน่วยน้ำ (ยูนิต) *"
+                      type="number"
+                      value={formData.waterUnit}
+                      onChange={(e) => setFormData({ ...formData, waterUnit: e.target.value })}
+                      InputProps={{
+                        inputProps: { min: 0 },
+                        sx: { fontSize: '0.85rem' }
+                      }}
+                      InputLabelProps={{
+                        sx: { fontSize: '0.85rem' }
+                      }}
+                      sx={{
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: 1.5
+                        }
+                      }}
+                      helperText="อัตรา: 3 บาท/ยูนิต"
+                      FormHelperTextProps={{
+                        sx: { fontSize: '0.7rem' }
+                      }}
+                    />
 
-                    <Box sx={{ flex: '1 1 45%', minWidth: 250 }}>
-                      <TextField
-                        fullWidth
-                        label="หน่วยไฟ (ยูนิต) *"
-                        type="number"
-                        value={formData.electricUnit}
-                        onChange={(e) => setFormData({ ...formData, electricUnit: e.target.value })}
-                        InputProps={{
-                          inputProps: { min: 0 }
-                        }}
-                        sx={{
-                          '& .MuiOutlinedInput-root': {
-                            borderRadius: 2
-                          }
-                        }}
-                        helperText="อัตรา: 5 บาท/ยูนิต"
-                      />
-                    </Box>
+                    <TextField
+                      fullWidth
+                      size="small"
+                      label="หน่วยไฟ (ยูนิต) *"
+                      type="number"
+                      value={formData.electricUnit}
+                      onChange={(e) => setFormData({ ...formData, electricUnit: e.target.value })}
+                      InputProps={{
+                        inputProps: { min: 0 },
+                        sx: { fontSize: '0.85rem' }
+                      }}
+                      InputLabelProps={{
+                        sx: { fontSize: '0.85rem' }
+                      }}
+                      sx={{
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: 1.5
+                        }
+                      }}
+                      helperText="อัตรา: 5 บาท/ยูนิต"
+                      FormHelperTextProps={{
+                        sx: { fontSize: '0.7rem' }
+                      }}
+                    />
                   </Box>
                 </Box>
               </>
             )}
 
             {selectedRental && selectedRental.rentType === 'daily' && (
-              <Alert severity="info" sx={{ mb: 3, borderRadius: 2 }}>
+              <Alert 
+                severity="info" 
+                sx={{ 
+                  mb: 2.5, 
+                  borderRadius: 1.5,
+                  border: '1px solid #bfdbfe',
+                  bgcolor: '#eff6ff',
+                  fontSize: '0.8rem',
+                  py: 0.5,
+                  '& .MuiAlert-icon': { color: '#3b82f6' }
+                }}
+              >
                 การเช่ารายวันไม่มีค่าน้ำและค่าไฟ
               </Alert>
             )}
 
-            <Divider sx={{ my: 3 }} />
+            <Divider sx={{ my: 2.5, borderColor: '#f1f5f9' }} />
 
-            <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
+            {/* Action Buttons */}
+            <Box sx={{ display: 'flex', gap: 1.5, justifyContent: 'flex-end' }}>
               <Button
                 variant="outlined"
                 onClick={() => router.push('/admin_invoices')}
                 sx={{
-                  py: 1.3,
-                  px: 3,
-                  borderRadius: 2,
-                  borderColor: '#dee2e6',
-                  color: '#6c757d',
+                  py: 0.75,
+                  px: 2,
+                  borderRadius: 1.5,
+                  borderColor: '#e2e8f0',
+                  color: '#64748b',
                   fontWeight: 600,
                   textTransform: 'none',
+                  fontSize: '0.8rem',
                   '&:hover': {
-                    borderColor: '#2c3e50',
-                    backgroundColor: '#f8f9fa'
+                    borderColor: '#cbd5e1',
+                    bgcolor: '#f8fafc'
                   }
                 }}
               >
@@ -406,24 +437,23 @@ const AdminCreateInvoice: React.FC = () => {
               <Button
                 type="submit"
                 variant="contained"
-                startIcon={submitting ? <CircularProgress size={20} color="inherit" /> : <Save />}
+                startIcon={submitting ? <CircularProgress size={14} color="inherit" /> : <Save sx={{ fontSize: 16 }} />}
                 disabled={submitting || !formData.rentalId}
                 sx={{
-                  py: 1.3,
-                  px: 3,
-                  borderRadius: 2,
-                  backgroundColor: '#2c3e50',
-                  color: '#fff',
+                  py: 0.75,
+                  px: 2,
+                  borderRadius: 1.5,
+                  bgcolor: '#1a1a2e',
+                  color: '#ffffff',
                   fontWeight: 600,
                   textTransform: 'none',
-                  boxShadow: '0 4px 12px rgba(44, 62, 80, 0.3)',
+                  fontSize: '0.8rem',
                   '&:hover': {
-                    backgroundColor: '#1a252f',
-                    boxShadow: '0 6px 16px rgba(44, 62, 80, 0.4)'
+                    bgcolor: '#0f0f1e'
                   },
                   '&:disabled': {
-                    backgroundColor: '#adb5bd',
-                    color: '#fff'
+                    bgcolor: '#cbd5e1',
+                    color: '#ffffff'
                   }
                 }}
               >
@@ -431,25 +461,6 @@ const AdminCreateInvoice: React.FC = () => {
               </Button>
             </Box>
           </Box>
-        </Paper>
-
-        <Paper sx={{
-          mt: 3,
-          p: 3,
-          borderRadius: 3,
-          backgroundColor: '#fff3cd',
-          border: '1px solid #ffc107',
-          maxWidth: 800
-        }}>
-          <Typography variant="body2" sx={{ fontWeight: 600, mb: 1, color: '#856404' }}>
-            📌 หมายเหตุ
-          </Typography>
-          <Typography variant="body2" sx={{ color: '#856404' }}>
-            • การเช่ารายวัน: ไม่มีค่าน้ำและค่าไฟ<br />
-            • การเช่ารายเดือน: ต้องกรอกมิเตอร์น้ำและไฟ (อัตราน้ำ 3 บาท/ยูนิต, อัตราไฟ 5 บาท/ยูนิต)<br />
-            • ค่าแอร์จะคิดอัตโนมัติ 200 บาท (ถ้าห้องมีแอร์)<br />
-            • ระบบจะคำนวณค่าใช้จ่ายทั้งหมดอัตโนมัติ
-          </Typography>
         </Paper>
       </Box>
     </Box>

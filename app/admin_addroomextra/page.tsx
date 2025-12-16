@@ -111,7 +111,7 @@ const AdminAddExtraPage: React.FC = () => {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  placeholder="เช่น ค่าไฟ, ค่าน้ำ, เตียงเสริม"
+                  placeholder="เช่น ค่าจอดรถ, เตียงเสริม"
                   size="small"
                   fullWidth
                   required
